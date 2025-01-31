@@ -49,8 +49,10 @@ export const requestLogger = (req, res, next) => {
     body: req.method !== 'GET' ? req.body : undefined
   });
 
-  // Override res.json to log response
+  // Override res.json and res.send to log response
   const originalJson = res.json;
+  const originalSend = res.send;
+  
   res.json = function(body) {
     const responseTime = Date.now() - start;
     
@@ -63,6 +65,27 @@ export const requestLogger = (req, res, next) => {
     });
 
     return originalJson.call(this, body);
+  };
+
+  res.send = function(body) {
+    const responseTime = Date.now() - start;
+    const isFileDownload = req.url.startsWith('/files') && req.method === 'GET';
+    
+    logger.info('Outgoing response', {
+      method: req.method,
+      url: req.url,
+      statusCode: res.statusCode,
+      responseTime,
+      // For file downloads, log metadata instead of content
+      body: isFileDownload ? {
+        type: 'file',
+        size: body.length,
+        contentType: res.getHeader('Content-Type'),
+        contentDisposition: res.getHeader('Content-Disposition')
+      } : body
+    });
+
+    return originalSend.call(this, body);
   };
 
   next();
@@ -94,10 +117,21 @@ export const performanceLogger = {
   },
   
   logQuickbaseResponse: (response, duration) => {
+    // Check if this is a file response
+    const isFileResponse = response.config?.url?.startsWith('/v1/files') && 
+                          response.config.method === 'GET';
+
     logger.info('Quickbase response', {
       status: response.status,
       duration,
-      data: response.data
+      headers: response.headers,
+      // For file downloads, log metadata instead of content
+      data: isFileResponse ? {
+        type: 'file',
+        contentType: response.headers['content-type'],
+        contentDisposition: response.headers['content-disposition'],
+        size: response.headers['content-length'],
+      } : response.data
     });
   },
   

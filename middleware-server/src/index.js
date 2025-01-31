@@ -28,6 +28,21 @@ app.post('/tables', handleQuickbaseRequest('POST', '/v1/tables'));
 app.get('/tables/:tableId', handleQuickbaseRequest('GET', '/v1/tables/:tableId'));
 app.post('/tables/:tableId', handleQuickbaseRequest('POST', '/v1/tables/:tableId'));
 app.delete('/tables/:tableId', handleQuickbaseRequest('DELETE', '/v1/tables/:tableId'));
+// Table relationships
+app.get('/tables/:tableId/relationships', handleQuickbaseRequest('GET', '/v1/tables/:tableId/relationships'));
+app.post('/tables/:tableId/relationship', handleQuickbaseRequest('POST', '/v1/tables/:tableId/relationship'));
+app.post('/tables/:tableId/relationship/:relationshipId', handleQuickbaseRequest('POST', '/v1/tables/:tableId/relationship/:relationshipId'));
+app.delete('/tables/:tableId/relationship/:relationshipId', handleQuickbaseRequest('DELETE', '/v1/tables/:tableId/relationship/:relationshipId'));
+
+// Files endpoints
+app.get('/files/:tableId/:recordId/:fieldId/:versionNumber', handleQuickbaseRequest('GET', '/v1/files/:tableId/:recordId/:fieldId/:versionNumber'));
+app.delete('/files/:tableId/:recordId/:fieldId/:versionNumber', handleQuickbaseRequest('DELETE', '/v1/files/:tableId/:recordId/:fieldId/:versionNumber'));
+
+// Users endpoints
+app.post('/users', handleQuickbaseRequest('POST', '/v1/users'));
+app.put('/users/deny', handleQuickbaseRequest('PUT', '/v1/users/deny'));
+app.put('/users/deny/:shouldDeleteFromGroups', handleQuickbaseRequest('PUT', '/v1/users/deny/:shouldDeleteFromGroups'));
+app.put('/users/undeny', handleQuickbaseRequest('PUT', '/v1/users/undeny'));
 
 // Fields endpoints
 app.get('/fields', handleQuickbaseRequest('GET', '/v1/fields'));

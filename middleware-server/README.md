@@ -30,6 +30,9 @@ This middleware server acts as a proxy between GPT actions and the Quickbase API
 - Core API endpoints implemented:
   - Apps API (GET, POST, GET/:id, DELETE)
   - Records API (query, create, delete)
+  - Tables API with relationships
+  - Files API with binary support
+  - Users API with access management
 - Authentication system:
   - Middleware API key validation
   - Quickbase header management
@@ -39,26 +42,27 @@ This middleware server acts as a proxy between GPT actions and the Quickbase API
   - Performance monitoring
   - Error tracking
   - File-based and console logging
+  - Special handling for binary data
 
 ### Current Focus
-1. Implementing additional endpoints:
-   - Tables API integration
-   - Fields API support
-   - Files API implementation
-2. Enhancing error handling:
+1. Enhancing error handling:
    - Custom error messages
    - Error recovery strategies
    - Error notification system
-
-### Next Steps
-1. Implement advanced features:
+2. Implementing advanced features:
    - Response transformation
    - Request rate limiting
    - Caching strategy
-2. Add monitoring and alerting:
+
+### Next Steps
+1. Add monitoring and alerting:
    - Health checks
    - Performance metrics
    - Alert notifications
+2. Production readiness:
+   - Load testing
+   - Security auditing
+   - Documentation updates
 
 ## Setup
 
@@ -100,6 +104,29 @@ npm start
 - POST /records - Insert/update records
 - DELETE /records - Delete records
 
+### Tables
+- GET /tables - List tables in an app
+- POST /tables - Create a table
+- GET /tables/:tableId - Get table details
+- POST /tables/:tableId - Update table
+- DELETE /tables/:tableId - Delete table
+
+### Table Relationships
+- GET /tables/:tableId/relationships - Get relationships
+- POST /tables/:tableId/relationship - Create relationship
+- POST /tables/:tableId/relationship/:relationshipId - Update relationship
+- DELETE /tables/:tableId/relationship/:relationshipId - Delete relationship
+
+### Files
+- GET /files/:tableId/:recordId/:fieldId/:versionNumber - Download file
+- DELETE /files/:tableId/:recordId/:fieldId/:versionNumber - Delete file
+
+### Users
+- POST /users - Get users (with pagination)
+- PUT /users/deny - Deny users access
+- PUT /users/deny/:shouldDeleteFromGroups - Deny and remove users from groups
+- PUT /users/undeny - Undeny users
+
 ## Authentication
 
 ### Middleware Authentication
@@ -133,11 +160,13 @@ The middleware implements comprehensive logging with:
    - Query parameters
    - Request body (for non-GET requests)
    - Response status and timing
+   - Special handling for file downloads
 
 2. Performance Monitoring:
    - Request duration tracking
    - Quickbase API call timing
    - Response size monitoring
+   - Binary data metrics
 
 3. Error Tracking:
    - Detailed error messages
@@ -150,6 +179,7 @@ The middleware implements comprehensive logging with:
    - File-based logging for production
    - Separate error log file
    - JSON formatted logs
+   - Binary-safe logging
 
 ## Error Handling
 
@@ -158,3 +188,4 @@ The middleware provides detailed error responses including:
 - Quickbase API errors (with original error messages)
 - Request validation errors
 - Server errors (500)
+- Binary data handling errors

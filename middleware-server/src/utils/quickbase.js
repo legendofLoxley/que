@@ -39,6 +39,22 @@ export const handleQuickbaseRequest = (method, path) => async (req, res) => {
     // Log response
     performanceLogger.logQuickbaseResponse(response, duration);
 
+    // Special handling for file downloads
+    if (finalPath.startsWith('/v1/files') && method === 'GET') {
+      // Get filename from Content-Disposition header if present
+      const contentDisposition = response.headers['content-disposition'];
+      const filename = contentDisposition 
+        ? contentDisposition.split('filename=')[1].replace(/"/g, '')
+        : 'download';
+
+      // Set response headers for file download
+      res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
+      res.setHeader('Content-Type', response.headers['content-type'] || 'application/octet-stream');
+      
+      // Return base64 content directly
+      return res.send(Buffer.from(response.data, 'base64'));
+    }
+
     res.json(response.data);
   } catch (error) {
     performanceLogger.logQuickbaseError(error);
