@@ -1,0 +1,592 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "title": "Quick Base API",
+        "version": "1.0.0"
+    },
+    "host": "api.quickbase.com/v1",
+    "basePath": "/",
+    "schemes": [
+        "https"
+    ],
+    "paths": {
+        "/users": {
+            "post": {
+                "description": "Get all users in an account or narrowed down list of users filtered by email(s). The returned users may be paginated depending on the user count. The count of the returned users may vary. When `nextPageToken` value in the response is not empty, that indicates that there are more results to be returned, you can use this value to get the next result set ('page').",
+                "summary": "Get users",
+                "operationId": "getUsers",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "accountId",
+                        "description": "The account id being used to get users. If no value is specified, the first account associated with the requesting user token is chosen.",
+                        "required": false,
+                        "in": "query",
+                        "example": 1562946434000,
+                        "type": "number"
+                    },
+                    {
+                        "name": "QB-Realm-Hostname",
+                        "description": "Your Quickbase domain, for example demo.quickbase.com",
+                        "required": true,
+                        "in": "header",
+                        "example": "demo.quickbase.com",
+                        "type": "string"
+                    },
+                    {
+                        "name": "User-Agent",
+                        "description": "This is entered by the person or utility invoking the API. You might custom create this or use the default one of your toolkit. Being descriptive here may offer more identification and troubleshooting capabilities.",
+                        "required": false,
+                        "in": "header",
+                        "example": "FileService_Integration_V2.1",
+                        "type": "string"
+                    },
+                    {
+                        "name": "Authorization",
+                        "description": "The Quickbase authentication scheme you are using to authenticate the request, as described on the [authorization page](../auth).",
+                        "required": true,
+                        "in": "header",
+                        "example": "QB-USER-TOKEN xxxxxx_xxx_xxxxxxxxxxxxxxxxxxxxxxx",
+                        "type": "string"
+                    },
+                    {
+                        "x-amf-mediaType": "application/json",
+                        "in": "body",
+                        "name": "generated",
+                        "schema": {
+                            "x-amf-examples": {
+                                "Get first page example": {
+                                    "emails": [
+                                        "jswilson@domain.com",
+                                        "jon_doe@domain.com",
+                                        "sjackson@domain.com"
+                                    ],
+                                    "appIds": [
+                                        "ab3rd3",
+                                        "23erfd",
+                                        "xpsd32"
+                                    ],
+                                    "nextPageToken": ""
+                                },
+                                "Get next page example": {
+                                    "emails": [
+                                        "jswilson@domain.com",
+                                        "sjackson@domain.com"
+                                    ],
+                                    "appIds": [
+                                        "ab3rd3",
+                                        "23erfd"
+                                    ],
+                                    "nextPageToken": "bzw2a9"
+                                }
+                            },
+                            "type": "object",
+                            "additionalProperties": true,
+                            "properties": {
+                                "emails": {
+                                    "description": "When provided, the returned users will be narrowed down only to the users included in this list.",
+                                    "type": "array",
+                                    "uniqueItems": true,
+                                    "items": {
+                                        "type": "string",
+                                        "pattern": "^.+@.+\\..+$",
+                                        "minLength": 2,
+                                        "maxLength": 256
+                                    }
+                                },
+                                "appIds": {
+                                    "description": "When provided, the returned users will be narrowed down only to the users assigned to the app id's provided in this list. The provided app id's should belong to the same account.",
+                                    "type": "array",
+                                    "uniqueItems": true,
+                                    "items": {
+                                        "type": "string"
+                                    }
+                                },
+                                "nextPageToken": {
+                                    "description": "Next page token used to get the next 'page' of results when available. When this field is empty, the first page is returned.",
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "x-amf-mediaType": "application/json",
+                        "schema": {
+                            "x-amf-examples": {
+                                "All results example": {
+                                    "users": [
+                                        {
+                                            "userName": "jdoe",
+                                            "firstName": "Jon",
+                                            "lastName": "Doe",
+                                            "emailAddress": "jdoe@domain.com",
+                                            "hashId": "58351651.xc1"
+                                        },
+                                        {
+                                            "userName": "swilson",
+                                            "firstName": "Simone",
+                                            "lastName": "Wilson",
+                                            "emailAddress": "jswilson@domain.com",
+                                            "hashId": "58351648.xc1"
+                                        },
+                                        {
+                                            "userName": "sjackson",
+                                            "firstName": "Samuel",
+                                            "lastName": "Jackson",
+                                            "emailAddress": "sjackson@domain.com",
+                                            "hashId": "58351643.xc1"
+                                        }
+                                    ],
+                                    "metadata": {
+                                        "nextPageToken": ""
+                                    }
+                                },
+                                "Paged results example": {
+                                    "users": [
+                                        {
+                                            "userName": "swilson",
+                                            "firstName": "Simone",
+                                            "lastName": "Wilson",
+                                            "emailAddress": "jswilson@domain.com",
+                                            "hashId": "58351648.xc1"
+                                        },
+                                        {
+                                            "userName": "sjackson",
+                                            "firstName": "Samuel",
+                                            "lastName": "Jackson",
+                                            "emailAddress": "sjackson@domain.com",
+                                            "hashId": "58351643.xc1"
+                                        }
+                                    ],
+                                    "metadata": {
+                                        "nextPageToken": "bzw2ba"
+                                    }
+                                }
+                            },
+                            "type": "object",
+                            "additionalProperties": true,
+                            "required": [
+                                "users",
+                                "metadata"
+                            ],
+                            "properties": {
+                                "users": {
+                                    "description": "A list of users found in an account with the given criterias",
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "additionalProperties": true,
+                                        "required": [
+                                            "userName",
+                                            "firstName",
+                                            "lastName",
+                                            "emailAddress",
+                                            "hashId"
+                                        ],
+                                        "properties": {
+                                            "userName": {
+                                                "type": "string"
+                                            },
+                                            "firstName": {
+                                                "type": "string"
+                                            },
+                                            "lastName": {
+                                                "type": "string"
+                                            },
+                                            "emailAddress": {
+                                                "type": "string"
+                                            },
+                                            "hashId": {
+                                                "type": "string"
+                                            }
+                                        }
+                                    }
+                                },
+                                "metadata": {
+                                    "description": "Additional request information",
+                                    "type": "object",
+                                    "additionalProperties": true,
+                                    "required": [
+                                        "nextPageToken"
+                                    ],
+                                    "properties": {
+                                        "nextPageToken": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "Users"
+                ]
+            }
+        },
+        "/users/deny": {
+            "put": {
+                "description": "Denies users access to the realm but leaves them listed in groups they have been added to.",
+                "summary": "Deny users",
+                "operationId": "denyUsers",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "accountId",
+                        "description": "The account id being used to deny users. If no value is specified, the first account associated with the requesting user token is chosen.",
+                        "required": false,
+                        "in": "query",
+                        "example": 1562946434000,
+                        "type": "number"
+                    },
+                    {
+                        "name": "QB-Realm-Hostname",
+                        "description": "Your Quickbase domain, for example demo.quickbase.com",
+                        "required": true,
+                        "in": "header",
+                        "example": "demo.quickbase.com",
+                        "type": "string"
+                    },
+                    {
+                        "name": "User-Agent",
+                        "description": "This is entered by the person or utility invoking the API. You might custom create this or use the default one of your toolkit. Being descriptive here may offer more identification and troubleshooting capabilities.",
+                        "required": false,
+                        "in": "header",
+                        "example": "FileService_Integration_V2.1",
+                        "type": "string"
+                    },
+                    {
+                        "name": "Authorization",
+                        "description": "The Quickbase authentication scheme you are using to authenticate the request, as described on the [authorization page](../auth).",
+                        "required": true,
+                        "in": "header",
+                        "example": "QB-USER-TOKEN xxxxxx_xxx_xxxxxxxxxxxxxxxxxxxxxxx",
+                        "type": "string"
+                    },
+                    {
+                        "x-amf-mediaType": "application/json",
+                        "in": "body",
+                        "name": "generated",
+                        "schema": {
+                            "description": "A list of user IDs that need to be denied.",
+                            "example": [
+                                "123456.ab1s",
+                                "423123.vc2d",
+                                "78910.ba1s"
+                            ],
+                            "type": "array",
+                            "maxItems": 1000,
+                            "minItems": 1,
+                            "uniqueItems": true,
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "x-amf-mediaType": "application/json",
+                        "schema": {
+                            "example": {
+                                "failure": [
+                                    "423123.vc2d",
+                                    "78910.ba1s"
+                                ],
+                                "success": [
+                                    "123456.ab1s"
+                                ]
+                            },
+                            "type": "object",
+                            "additionalProperties": true,
+                            "required": [
+                                "failure",
+                                "success"
+                            ],
+                            "properties": {
+                                "failure": {
+                                    "description": "A list of users that couldn't be denied. This also includes the ID's of users that are not valid.",
+                                    "example": [
+                                        "78910.qwer",
+                                        "3512.asd1"
+                                    ],
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string"
+                                    }
+                                },
+                                "success": {
+                                    "description": "A list of users that have successfully been denied.",
+                                    "example": [
+                                        "123456.ab1s"
+                                    ],
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "Users"
+                ]
+            }
+        },
+        "/users/deny/{shouldDeleteFromGroups}": {
+            "put": {
+                "description": "Denies users access to the realm and allows you to remove them from groups.",
+                "summary": "Deny and remove users from groups",
+                "operationId": "denyUsersAndGroups",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "accountId",
+                        "description": "The account id being used to deny users. If no value is specified, the first account associated with the requesting user token is chosen.",
+                        "required": false,
+                        "in": "query",
+                        "example": 1562946434000,
+                        "type": "number"
+                    },
+                    {
+                        "name": "shouldDeleteFromGroups",
+                        "description": "Specifies if the users should also be removed from all groups.",
+                        "required": true,
+                        "in": "path",
+                        "example": false,
+                        "type": "boolean"
+                    },
+                    {
+                        "name": "QB-Realm-Hostname",
+                        "description": "Your Quickbase domain, for example demo.quickbase.com",
+                        "required": true,
+                        "in": "header",
+                        "example": "demo.quickbase.com",
+                        "type": "string"
+                    },
+                    {
+                        "name": "User-Agent",
+                        "description": "This is entered by the person or utility invoking the API. You might custom create this or use the default one of your toolkit. Being descriptive here may offer more identification and troubleshooting capabilities.",
+                        "required": false,
+                        "in": "header",
+                        "example": "FileService_Integration_V2.1",
+                        "type": "string"
+                    },
+                    {
+                        "name": "Authorization",
+                        "description": "The Quickbase authentication scheme you are using to authenticate the request, as described on the [authorization page](../auth).",
+                        "required": true,
+                        "in": "header",
+                        "example": "QB-USER-TOKEN xxxxxx_xxx_xxxxxxxxxxxxxxxxxxxxxxx",
+                        "type": "string"
+                    },
+                    {
+                        "x-amf-mediaType": "application/json",
+                        "in": "body",
+                        "name": "generated",
+                        "schema": {
+                            "description": "A list of user IDs that need to be denied.",
+                            "example": [
+                                "123456.ab1s",
+                                "423123.vc2d",
+                                "78910.ba1s"
+                            ],
+                            "type": "array",
+                            "maxItems": 1000,
+                            "minItems": 1,
+                            "uniqueItems": true,
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "x-amf-mediaType": "application/json",
+                        "schema": {
+                            "example": {
+                                "failure": [
+                                    "423123.vc2d",
+                                    "78910.ba1s"
+                                ],
+                                "success": [
+                                    "123456.ab1s"
+                                ]
+                            },
+                            "type": "object",
+                            "additionalProperties": true,
+                            "required": [
+                                "failure",
+                                "success"
+                            ],
+                            "properties": {
+                                "failure": {
+                                    "description": "A list of users that couldn't be denied. This also includes the ID's of users that are not valid.",
+                                    "example": [
+                                        "78910.qwer",
+                                        "3512.asd1"
+                                    ],
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string"
+                                    }
+                                },
+                                "success": {
+                                    "description": "A list of users that have successfully been denied.",
+                                    "example": [
+                                        "123456.ab1s"
+                                    ],
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "Users"
+                ]
+            }
+        },
+        "/users/undeny": {
+            "put": {
+                "description": "Grants users that have previously been denied access to the realm.",
+                "summary": "Undeny users",
+                "operationId": "undenyUsers",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "accountId",
+                        "description": "The account id being used to undeny users. If no value is specified, the first account associated with the requesting user token is chosen.",
+                        "required": false,
+                        "in": "query",
+                        "example": 1562946434000,
+                        "type": "number"
+                    },
+                    {
+                        "name": "QB-Realm-Hostname",
+                        "description": "Your Quickbase domain, for example demo.quickbase.com",
+                        "required": true,
+                        "in": "header",
+                        "example": "demo.quickbase.com",
+                        "type": "string"
+                    },
+                    {
+                        "name": "User-Agent",
+                        "description": "This is entered by the person or utility invoking the API. You might custom create this or use the default one of your toolkit. Being descriptive here may offer more identification and troubleshooting capabilities.",
+                        "required": false,
+                        "in": "header",
+                        "example": "FileService_Integration_V2.1",
+                        "type": "string"
+                    },
+                    {
+                        "name": "Authorization",
+                        "description": "The Quickbase authentication scheme you are using to authenticate the request, as described on the [authorization page](../auth).",
+                        "required": true,
+                        "in": "header",
+                        "example": "QB-USER-TOKEN xxxxxx_xxx_xxxxxxxxxxxxxxxxxxxxxxx",
+                        "type": "string"
+                    },
+                    {
+                        "x-amf-mediaType": "application/json",
+                        "in": "body",
+                        "name": "generated",
+                        "schema": {
+                            "description": "A list of user IDs that need to be undenied.",
+                            "example": [
+                                "123456.ab1s",
+                                "423123.vc2d",
+                                "78910.ba1s"
+                            ],
+                            "type": "array",
+                            "maxItems": 1000,
+                            "minItems": 1,
+                            "uniqueItems": true,
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "x-amf-mediaType": "application/json",
+                        "schema": {
+                            "example": {
+                                "failure": [
+                                    "423123.vc2d",
+                                    "78910.ba1s"
+                                ],
+                                "success": [
+                                    "123456.ab1s"
+                                ]
+                            },
+                            "type": "object",
+                            "additionalProperties": true,
+                            "required": [
+                                "failure",
+                                "success"
+                            ],
+                            "properties": {
+                                "failure": {
+                                    "description": "A list of users that couldn't be undenied. This also includes the ID's of users that are not valid.",
+                                    "example": [
+                                        "78910.qwer",
+                                        "3512.asd1"
+                                    ],
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string"
+                                    }
+                                },
+                                "success": {
+                                    "description": "A list of users that have successfully been undenied.",
+                                    "example": [
+                                        "123456.ab1s"
+                                    ],
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "Users"
+                ]
+            }
+        }
+    }
+}

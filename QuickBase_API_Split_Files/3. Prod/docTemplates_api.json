@@ -1,0 +1,213 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "title": "Quick Base API",
+        "version": "1.0.0"
+    },
+    "host": "api.quickbase.com/v1",
+    "basePath": "/",
+    "schemes": [
+        "https"
+    ],
+    "paths": {
+        "/docTemplates/{templateId}/generate": {
+            "get": {
+                "tags": [
+                    "Document Templates"
+                ],
+                "summary": "Generate a document",
+                "description": "Generates a document from a template. This feature is only available on business or enterprise plans.",
+                "operationId": "generateDocument",
+                "parameters": [
+                    {
+                        "name": "templateId",
+                        "description": "This is the ID of document template.",
+                        "required": true,
+                        "in": "path",
+                        "example": 1,
+                        "type": "number"
+                    },
+                    {
+                        "name": "tableId",
+                        "description": "The unique identifier of the table.",
+                        "required": true,
+                        "in": "query",
+                        "example": "bck7gp3q2",
+                        "type": "string"
+                    },
+                    {
+                        "name": "recordId",
+                        "description": "The ID of the record",
+                        "required": false,
+                        "in": "query",
+                        "example": 1,
+                        "type": "number"
+                    },
+                    {
+                        "name": "filename",
+                        "description": "File name for the downloaded file",
+                        "required": true,
+                        "in": "query",
+                        "example": "Document",
+                        "type": "string"
+                    },
+                    {
+                        "name": "QB-Realm-Hostname",
+                        "in": "header",
+                        "description": "Your Quickbase domain, for example demo.quickbase.com",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "demo.quickbase.com"
+                    },
+                    {
+                        "name": "User-Agent",
+                        "description": "Information is entered by the person or utility invoking the API. Choose between the default in your toolkit or custom create it. Being as descriptive as possible will help in identification and troubleshooting.",
+                        "required": false,
+                        "in": "header",
+                        "example": "FileService_Integration_V2.1",
+                        "type": "string"
+                    },
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "The Quickbase authentication scheme you are using to authenticate the request, as described on the [authorization page](../auth).",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "QB-USER-TOKEN xxxxxx_xxx_xxxxxxxxxxxxxxxxxxxxxxx"
+                    },
+                    {
+                        "name": "Accept",
+                        "in": "header",
+                        "description": "The content-type of the response. application/json will return a JSON payload with a base64 encoded file. application/octet-stream will download the file directly.",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "application/json",
+                                "application/octet-stream"
+                            ]
+                        },
+                        "example": "application/json, application/octet-stream"
+                    },
+                    {
+                        "name": "format",
+                        "in": "query",
+                        "description": "The format of the file that is returned. Default is \"pdf\".",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "html",
+                                "pdf",
+                                "docx"
+                            ]
+                        },
+                        "example": "pdf"
+                    },
+                    {
+                        "name": "margin",
+                        "in": "query",
+                        "description": "Margin formatted as top right bottom left, separated by spaces. Add to override the value set in the template builder.",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "pattern": "^(\\d+([.]\\d{1,2})? ){3}(\\d+([.]\\d{1,2})?)$"
+                        },
+                        "example": "1 1 1 1"
+                    },
+                    {
+                        "name": "unit",
+                        "in": "query",
+                        "description": "Unit of measurement for the margin. Default is \"in\". Add to override the value set in the template builder.",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "in",
+                                "cm",
+                                "nm",
+                                "px"
+                            ]
+                        },
+                        "example": "in"
+                    },
+                    {
+                        "name": "pageSize",
+                        "in": "query",
+                        "description": "Page size. Default is \"A4\". Add to override the value set in the template builder.",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "Letter",
+                                "Legal",
+                                "Tabloid",
+                                "A3",
+                                "A4",
+                                "A5",
+                                "A6"
+                            ]
+                        },
+                        "example": "Letter"
+                    },
+                    {
+                        "name": "orientation",
+                        "in": "query",
+                        "description": "Page orientation. Default is \"portrait\". Add to override the value set in the template builder.",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "portrait",
+                                "landscape"
+                            ]
+                        },
+                        "example": "portrait"
+                    },
+                    {
+                        "name": "realm",
+                        "in": "query",
+                        "description": "Your Quickbase domain, for example demo.quickbase.com",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "demo.quickbase.com"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "x-amf-mediaType": "application/json",
+                        "schema": {
+                            "example": {
+                                "fileName": "Document.pdf",
+                                "data": "data",
+                                "contentType": "application/pdf"
+                            },
+                            "type": "object",
+                            "additionalProperties": true,
+                            "properties": {
+                                "fileName": {
+                                    "description": "The file name.",
+                                    "type": "string"
+                                },
+                                "data": {
+                                    "description": "Base64 encoded file content.",
+                                    "type": "string"
+                                },
+                                "contentType": {
+                                    "description": "The document content type.",
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

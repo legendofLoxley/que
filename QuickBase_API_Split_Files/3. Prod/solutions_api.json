@@ -1,0 +1,1031 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "title": "Quick Base API",
+        "version": "1.0.0"
+    },
+    "host": "api.quickbase.com/v1",
+    "basePath": "/",
+    "schemes": [
+        "https"
+    ],
+    "paths": {
+        "/solutions/{solutionId}": {
+            "get": {
+                "description": "Returns the QBL for the specified solution. Learn more about [QBL syntax](https://help.quickbase.com/hc/en-us/articles/24845511223828-What-is-QBL).  \n We are releasing schema coverage for QBL in stages. See [what's supported today](https://helpv2.quickbase.com/hc/en-us/articles/30119680754068-QBL-version-0-4-overview) in our QBL documentation.",
+                "summary": "Export a solution",
+                "operationId": "exportSolution",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/x-yaml"
+                ],
+                "parameters": [
+                    {
+                        "name": "solutionId",
+                        "description": "The unique identifier of a solution",
+                        "required": true,
+                        "in": "path",
+                        "example": "f53acd36-1e75-47ed-910c-0ca4fd165a84",
+                        "type": "string"
+                    },
+                    {
+                        "name": "QBL-Version",
+                        "description": "The QBL version to be used for the export. If not specified the default would be used.",
+                        "required": false,
+                        "in": "header",
+                        "example": "0.2",
+                        "type": "string"
+                    },
+                    {
+                        "name": "QB-Realm-Hostname",
+                        "description": "Your Quickbase domain, for example demo.quickbase.com",
+                        "required": true,
+                        "in": "header",
+                        "example": "demo.quickbase.com",
+                        "type": "string"
+                    },
+                    {
+                        "name": "User-Agent",
+                        "description": "Information is entered by the person or utility invoking the API. Choose between the default in your toolkit or custom create it. Being as descriptive as possible will help in identification and troubleshooting.",
+                        "required": false,
+                        "in": "header",
+                        "example": "FileService_Integration_V2.1",
+                        "type": "string"
+                    },
+                    {
+                        "name": "Authorization",
+                        "description": "The Quickbase authentication scheme you are using to authenticate the request, as described on the [authorization page](../auth).",
+                        "required": true,
+                        "in": "header",
+                        "example": "QB-USER-TOKEN xxxxxx_xxx_xxxxxxxxxxxxxxxxxxxxxxx",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "x-amf-mediaType": "application/x-yaml",
+                        "schema": {
+                            "example": "Solution:\n  Id: 8d2c3333-7d32-4ece-8073-57106c465384\n  Name: Example solution\n  Owner: manager@yourrealm.com\n  ExportDate: 2024-03-25 12:04:05\nVersion: 0.2\nResources:\n  $App_Example_app:\n    Type: QB::Application\n    Properties:\n      Name: Example app\n      Description: \n      AppColor: '#72509a'\n      Manager: manager@yourrealm.com\n      TableOrder: []\n      AppIcon: Application\n      CurrencySymbol: $\n      FiscalYearDesignation: Last\n      FirstDayOfWeek: Sun\n      DateFormat: MM-DD-YYYY\n      FirstMonthOfFiscalYear: Jan\n      CurrencySymbolPosition: Between\n      NumberFormat:\n        SeparatorStyle: CommaGroupingPeriodDecimal\n        SeparatorPlaces: none\n      DefaultViewMode: Auto\n      HideNewUpdatedIcons: false\n      DisableAllUsersSelection: false\n      CanCopyApp: Admin\n      CanExportData: Everyone\n      Searchable: false\n      RequireAppToken: true\n      ShowPerformanceBar: false\n      ShowPerformanceAnalyzer: false\n      GlobalSearchExactMatch: false\n      Utf8DataEncoding: false\n      Timezone: Default\n      Branding:\n        AppHeader:\n          HideQuickbaseStandardMenu: false\n        AppFooter: {}\n      RoleOrder:\n        - !Ref\n          Role: $Role_Viewer\n        - !Ref\n          Role: $Role_Participant\n        - !Ref\n          Role: $Role_Administrator\n    Roles:\n      $Role_Viewer:\n        Type: QB::Application::Role\n        Properties:\n          Name: Viewer\n          Description: \n          Default: false\n          ManageUsers: false\n          EditApp: false\n          DisableAccess: false\n          AppUI:\n            HideSettings: false\n            HideUsers: false\n            HideFavorites: false\n            HideSearch: false\n            HideHelp: false\n            HideTestAs: false\n          TableUI:\n            Global:\n              HideInBar: false\n              HideNewRecord: false\n              HideGridEdit: false\n              HideEmail: false\n              HidePrint: false\n              HideImportExport: false\n              HideSaveSpreadsheet: false\n              HideCreateCustomizeReport: false\n              HidePersonalSettings: false\n      $Role_Participant:\n        Type: QB::Application::Role\n        Properties:\n          Name: Participant\n          Description: \n          Default: true\n          ManageUsers: true\n          EditApp: false\n          DisableAccess: false\n          AppUI:\n            HideSettings: false\n            HideUsers: false\n            HideFavorites: false\n            HideSearch: false\n            HideHelp: false\n            HideTestAs: false\n          TableUI:\n            Global:\n              HideInBar: false\n              HideNewRecord: false\n              HideGridEdit: false\n              HideEmail: false\n              HidePrint: false\n              HideImportExport: false\n              HideSaveSpreadsheet: false\n              HideCreateCustomizeReport: false\n              HidePersonalSettings: false\n      $Role_Administrator:\n        Type: QB::Application::Role\n        Properties:\n          Name: Administrator\n          Description: \n          Default: false\n          ManageUsers: true\n          EditApp: true\n          DisableAccess: false\n          AppUI:\n            HideSettings: false\n            HideUsers: false\n            HideFavorites: false\n            HideSearch: false\n            HideHelp: false\n            HideTestAs: false\n          TableUI:\n            Global:\n              HideInBar: false\n              HideNewRecord: false\n              HideGridEdit: false\n              HideEmail: false\n              HidePrint: false\n              HideImportExport: false\n              HideSaveSpreadsheet: false\n              HideCreateCustomizeReport: false\n              HidePersonalSettings: false"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request. For example: Missing required headers, Missing required parameters, Malformed QBL and others. Message should provide more information, reach out to support if there\u2019s lack of clarity.",
+                        "x-amf-mediaType": "application/json",
+                        "schema": {
+                            "example": {
+                                "message": "Bad request.",
+                                "description": ""
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Solution does not exist. The supplied solution ID was not found.",
+                        "x-amf-mediaType": "application/json",
+                        "schema": {
+                            "example": {
+                                "message": "Not found.",
+                                "description": ""
+                            }
+                        }
+                    },
+                    "401/403": {
+                        "description": "Insufficient access. This could be for many reasons such as: User doesn\u2019t have SolutionHub access, User is not the owner or a contributor for the solution, User cannot create apps and others.  Message should provide more information.",
+                        "x-amf-mediaType": "application/json",
+                        "schema": {
+                            "example": {
+                                "message": "Forbidden.",
+                                "description": ""
+                            }
+                        }
+                    },
+                    "4xx/5xx": {
+                        "description": "Non-common error, reach out to support if there\u2019s lack of clarity.",
+                        "x-amf-mediaType": "application/json",
+                        "schema": {
+                            "example": {
+                                "message": "Internal server error.",
+                                "description": ""
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "Solutions"
+                ]
+            },
+            "put": {
+                "description": "Updates the solution using the provided QBL. Learn more about [QBL syntax](https://help.quickbase.com/hc/en-us/articles/24845511223828-What-is-QBL).  \n We are releasing schema coverage for QBL in stages. See [what's supported today](https://helpv2.quickbase.com/hc/en-us/articles/30119680754068-QBL-version-0-4-overview) in our QBL documentation.",
+                "summary": "Update a solution",
+                "operationId": "updateSolution",
+                "consumes": [
+                    "application/x-yaml"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "solutionId",
+                        "description": "The unique identifier of a solution",
+                        "required": true,
+                        "in": "path",
+                        "example": "f53acd36-1e75-47ed-910c-0ca4fd165a84",
+                        "type": "string"
+                    },
+                    {
+                        "name": "generated",
+                        "description": "The QBL to be used for the update.",
+                        "x-amf-mediaType": "application/x-yaml",
+                        "in": "body",
+                        "schema": {
+                            "example": "Version: 0.2\nResources:\n  $App_Example_app:\n    Type: QB::Application\n    Properties:\n      Name: Example app\n      Description: \n      AppColor: '#72509a'\n      Manager: manager@yourrealm.com\n      TableOrder: []\n      AppIcon: Application\n      CurrencySymbol: $\n      FiscalYearDesignation: Last\n      FirstDayOfWeek: Sun\n      DateFormat: MM-DD-YYYY\n      FirstMonthOfFiscalYear: Jan\n      CurrencySymbolPosition: Between\n      NumberFormat:\n        SeparatorStyle: CommaGroupingPeriodDecimal\n        SeparatorPlaces: none\n      DefaultViewMode: Auto\n      HideNewUpdatedIcons: false\n      DisableAllUsersSelection: false\n      CanCopyApp: Admin\n      CanExportData: Everyone\n      Searchable: false\n      RequireAppToken: true\n      ShowPerformanceBar: false\n      ShowPerformanceAnalyzer: false\n      GlobalSearchExactMatch: false\n      Utf8DataEncoding: false\n      Timezone: Default\n      Branding:\n        AppHeader:\n          HideQuickbaseStandardMenu: false\n        AppFooter: {}\n      RoleOrder:\n        - !Ref\n          Role: $Role_Viewer\n        - !Ref\n          Role: $Role_Participant\n        - !Ref\n          Role: $Role_Administrator\n    Roles:\n      $Role_Viewer:\n        Type: QB::Application::Role\n        Properties:\n          Name: Viewer\n          Description: \n          Default: false\n          ManageUsers: false\n          EditApp: false\n          DisableAccess: false\n          AppUI:\n            HideSettings: false\n            HideUsers: false\n            HideFavorites: false\n            HideSearch: false\n            HideHelp: false\n            HideTestAs: false\n          TableUI:\n            Global:\n              HideInBar: false\n              HideNewRecord: false\n              HideGridEdit: false\n              HideEmail: false\n              HidePrint: false\n              HideImportExport: false\n              HideSaveSpreadsheet: false\n              HideCreateCustomizeReport: false\n              HidePersonalSettings: false\n      $Role_Participant:\n        Type: QB::Application::Role\n        Properties:\n          Name: Participant\n          Description: \n          Default: true\n          ManageUsers: true\n          EditApp: false\n          DisableAccess: false\n          AppUI:\n            HideSettings: false\n            HideUsers: false\n            HideFavorites: false\n            HideSearch: false\n            HideHelp: false\n            HideTestAs: false\n          TableUI:\n            Global:\n              HideInBar: false\n              HideNewRecord: false\n              HideGridEdit: false\n              HideEmail: false\n              HidePrint: false\n              HideImportExport: false\n              HideSaveSpreadsheet: false\n              HideCreateCustomizeReport: false\n              HidePersonalSettings: false\n      $Role_Administrator:\n        Type: QB::Application::Role\n        Properties:\n          Name: Administrator\n          Description: \n          Default: false\n          ManageUsers: true\n          EditApp: true\n          DisableAccess: false\n          AppUI:\n            HideSettings: false\n            HideUsers: false\n            HideFavorites: false\n            HideSearch: false\n            HideHelp: false\n            HideTestAs: false\n          TableUI:\n            Global:\n              HideInBar: false\n              HideNewRecord: false\n              HideGridEdit: false\n              HideEmail: false\n              HidePrint: false\n              HideImportExport: false\n              HideSaveSpreadsheet: false\n              HideCreateCustomizeReport: false\n              HidePersonalSettings: false"
+                        }
+                    },
+                    {
+                        "name": "X-QBL-Errors-As-Success",
+                        "description": "If this header is set to true, the API will return a 207 status code even if there are errors. The errors will be returned in the response body.",
+                        "required": false,
+                        "in": "header",
+                        "example": "true",
+                        "type": "boolean"
+                    },
+                    {
+                        "name": "QB-Realm-Hostname",
+                        "description": "Your Quickbase domain, for example demo.quickbase.com",
+                        "required": true,
+                        "in": "header",
+                        "example": "demo.quickbase.com",
+                        "type": "string"
+                    },
+                    {
+                        "name": "User-Agent",
+                        "description": "Information is entered by the person or utility invoking the API. Choose between the default in your toolkit or custom create it. Being as descriptive as possible will help in identification and troubleshooting.",
+                        "required": false,
+                        "in": "header",
+                        "example": "FileService_Integration_V2.1",
+                        "type": "string"
+                    },
+                    {
+                        "name": "Authorization",
+                        "description": "The Quickbase authentication scheme you are using to authenticate the request, as described on the [authorization page](../auth).",
+                        "required": true,
+                        "in": "header",
+                        "example": "QB-USER-TOKEN xxxxxx_xxx_xxxxxxxxxxxxxxxxxxxxxxx",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "x-amf-mediaType": "application/json",
+                        "schema": {
+                            "example": {
+                                "solutionId": "097aefef-113a-4fc1-9c78-3ecb1003b95c",
+                                "alias": null,
+                                "createdResources": {
+                                    "apps": {}
+                                },
+                                "warnings": []
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request. For example: Missing required headers, Missing required parameters, Malformed QBL and others. Message should provide more information, reach out to support if there\u2019s lack of clarity.",
+                        "x-amf-mediaType": "application/json",
+                        "schema": {
+                            "example": {
+                                "message": "Bad request",
+                                "description": ""
+                            }
+                        }
+                    },
+                    "401/403": {
+                        "description": "Insufficient access. This could be for many reasons such as: User doesn\u2019t have SolutionHub access, User is not the owner or a contributor for the solution, User cannot create apps and others.  Message should provide more information.",
+                        "x-amf-mediaType": "application/json",
+                        "schema": {
+                            "example": {
+                                "message": "Forbidden",
+                                "description": ""
+                            }
+                        }
+                    },
+                    "4xx/5xx": {
+                        "description": "Non-common error, reach out to support if there\u2019s lack of clarity.",
+                        "x-amf-mediaType": "application/json",
+                        "schema": {
+                            "example": {
+                                "message": "Internal server error.",
+                                "description": ""
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "Solutions"
+                ]
+            }
+        },
+        "/solutions": {
+            "post": {
+                "description": "Creates a solution using the provided QBL. Learn more about [QBL syntax](https://help.quickbase.com/hc/en-us/articles/24845511223828-What-is-QBL).  \n We are releasing schema coverage for QBL in stages. See [what's supported today](https://helpv2.quickbase.com/hc/en-us/articles/30119680754068-QBL-version-0-4-overview) in our QBL documentation.",
+                "summary": "Create a solution",
+                "operationId": "createSolution",
+                "consumes": [
+                    "application/x-yaml"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "generated",
+                        "description": "The QBL to be used for the create.",
+                        "x-amf-mediaType": "application/x-yaml",
+                        "in": "body",
+                        "schema": {
+                            "example": "Version: 0.2\nResources:\n  $App_Example_app:\n    Type: QB::Application\n    Properties:\n      Name: Example app\n      Description: \n      AppColor: '#72509a'\n      Manager: manager@yourrealm.com\n      TableOrder: []\n      AppIcon: Application\n      CurrencySymbol: $\n      FiscalYearDesignation: Last\n      FirstDayOfWeek: Sun\n      DateFormat: MM-DD-YYYY\n      FirstMonthOfFiscalYear: Jan\n      CurrencySymbolPosition: Between\n      NumberFormat:\n        SeparatorStyle: CommaGroupingPeriodDecimal\n        SeparatorPlaces: none\n      DefaultViewMode: Auto\n      HideNewUpdatedIcons: false\n      DisableAllUsersSelection: false\n      CanCopyApp: Admin\n      CanExportData: Everyone\n      Searchable: false\n      RequireAppToken: true\n      ShowPerformanceBar: false\n      ShowPerformanceAnalyzer: false\n      GlobalSearchExactMatch: false\n      Utf8DataEncoding: false\n      Timezone: Default\n      Branding:\n        AppHeader:\n          HideQuickbaseStandardMenu: false\n        AppFooter: {}\n      RoleOrder:\n        - !Ref\n          Role: $Role_Viewer\n        - !Ref\n          Role: $Role_Participant\n        - !Ref\n          Role: $Role_Administrator\n    Roles:\n      $Role_Viewer:\n        Type: QB::Application::Role\n        Properties:\n          Name: Viewer\n          Description: \n          Default: false\n          ManageUsers: false\n          EditApp: false\n          DisableAccess: false\n          AppUI:\n            HideSettings: false\n            HideUsers: false\n            HideFavorites: false\n            HideSearch: false\n            HideHelp: false\n            HideTestAs: false\n          TableUI:\n            Global:\n              HideInBar: false\n              HideNewRecord: false\n              HideGridEdit: false\n              HideEmail: false\n              HidePrint: false\n              HideImportExport: false\n              HideSaveSpreadsheet: false\n              HideCreateCustomizeReport: false\n              HidePersonalSettings: false\n      $Role_Participant:\n        Type: QB::Application::Role\n        Properties:\n          Name: Participant\n          Description: \n          Default: true\n          ManageUsers: true\n          EditApp: false\n          DisableAccess: false\n          AppUI:\n            HideSettings: false\n            HideUsers: false\n            HideFavorites: false\n            HideSearch: false\n            HideHelp: false\n            HideTestAs: false\n          TableUI:\n            Global:\n              HideInBar: false\n              HideNewRecord: false\n              HideGridEdit: false\n              HideEmail: false\n              HidePrint: false\n              HideImportExport: false\n              HideSaveSpreadsheet: false\n              HideCreateCustomizeReport: false\n              HidePersonalSettings: false\n      $Role_Administrator:\n        Type: QB::Application::Role\n        Properties:\n          Name: Administrator\n          Description: \n          Default: false\n          ManageUsers: true\n          EditApp: true\n          DisableAccess: false\n          AppUI:\n            HideSettings: false\n            HideUsers: false\n            HideFavorites: false\n            HideSearch: false\n            HideHelp: false\n            HideTestAs: false\n          TableUI:\n            Global:\n              HideInBar: false\n              HideNewRecord: false\n              HideGridEdit: false\n              HideEmail: false\n              HidePrint: false\n              HideImportExport: false\n              HideSaveSpreadsheet: false\n              HideCreateCustomizeReport: false\n              HidePersonalSettings: false"
+                        }
+                    },
+                    {
+                        "name": "X-QBL-Errors-As-Success",
+                        "description": "If this header is set to true, the API will return a 207 status code even if there are errors. The errors will be returned in the response body.",
+                        "required": false,
+                        "in": "header",
+                        "example": "true",
+                        "type": "boolean"
+                    },
+                    {
+                        "name": "QB-Realm-Hostname",
+                        "description": "Your Quickbase domain, for example demo.quickbase.com",
+                        "required": true,
+                        "in": "header",
+                        "example": "demo.quickbase.com",
+                        "type": "string"
+                    },
+                    {
+                        "name": "User-Agent",
+                        "description": "Information is entered by the person or utility invoking the API. Choose between the default in your toolkit or custom create it. Being as descriptive as possible will help in identification and troubleshooting.",
+                        "required": false,
+                        "in": "header",
+                        "example": "FileService_Integration_V2.1",
+                        "type": "string"
+                    },
+                    {
+                        "name": "Authorization",
+                        "description": "The Quickbase authentication scheme you are using to authenticate the request, as described on the [authorization page](../auth).",
+                        "required": true,
+                        "in": "header",
+                        "example": "QB-USER-TOKEN xxxxxx_xxx_xxxxxxxxxxxxxxxxxxxxxxx",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "x-amf-mediaType": "application/json",
+                        "schema": {
+                            "example": {
+                                "solutionId": "097aefef-113a-4fc1-9c78-3ecb1003b95c",
+                                "alias": null,
+                                "createdResources": {
+                                    "apps": {}
+                                },
+                                "warnings": []
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request. For example: Missing required headers, Missing required parameters, Malformed QBL and others. Message should provide more information, reach out to support if there\u2019s lack of clarity.",
+                        "x-amf-mediaType": "application/json",
+                        "schema": {
+                            "example": {
+                                "message": "Bad request.",
+                                "description": ""
+                            }
+                        }
+                    },
+                    "401/403": {
+                        "description": "Insufficient access. This could be for many reasons such as: User doesn\u2019t have SolutionHub access, User is not the owner or a contributor for the solution, User cannot create apps and others.  Message should provide more information.",
+                        "x-amf-mediaType": "application/json",
+                        "schema": {
+                            "example": {
+                                "message": "Forbidden.",
+                                "description": ""
+                            }
+                        }
+                    },
+                    "4xx/5xx": {
+                        "description": "Non-common error, reach out to support if there\u2019s lack of clarity.",
+                        "x-amf-mediaType": "application/json",
+                        "schema": {
+                            "example": {
+                                "message": "Internal server error.",
+                                "description": ""
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "Solutions"
+                ]
+            }
+        },
+        "/solutions/{solutionId}/torecord": {
+            "get": {
+                "description": "Exports the solution and outputs the resulting QBL in a new record in the specified table. The QBL will be saved to a file in the file attachment field that is specified. The table cannot have any required fields besides the file attachment field.  \n We are releasing schema coverage for QBL in stages. See [what's supported today](https://helpv2.quickbase.com/hc/en-us/articles/30119680754068-QBL-version-0-4-overview) in our QBL documentation.",
+                "summary": "Export solution to record",
+                "operationId": "exportSolutionToRecord",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "solutionId",
+                        "description": "The unique identifier of the solution.",
+                        "required": true,
+                        "in": "path",
+                        "example": "f53acd36-1e75-47ed-910c-0ca4fd165a84",
+                        "type": "string"
+                    },
+                    {
+                        "name": "tableId",
+                        "description": "The unique identifier (dbid) of the table.",
+                        "required": true,
+                        "in": "query",
+                        "example": "buirwys7m",
+                        "type": "string"
+                    },
+                    {
+                        "name": "fieldId",
+                        "description": "The unique identifier (fid) of the field. It needs to be a file attachment field.",
+                        "required": true,
+                        "in": "query",
+                        "example": "8",
+                        "type": "int"
+                    },
+                    {
+                        "name": "X-QBL-Errors-As-Success",
+                        "description": "If this header is set to true, the API will return a 207 status code even if there are errors. The errors will be returned in the response body.",
+                        "required": false,
+                        "in": "header",
+                        "example": "true",
+                        "type": "boolean"
+                    },
+                    {
+                        "name": "QB-Realm-Hostname",
+                        "description": "Your Quickbase domain, for example demo.quickbase.com",
+                        "required": true,
+                        "in": "header",
+                        "example": "demo.quickbase.com",
+                        "type": "string"
+                    },
+                    {
+                        "name": "QBL-Version",
+                        "description": "The QBL version to be used for the export. If not specified the default would be used.",
+                        "required": false,
+                        "in": "header",
+                        "example": "0.2",
+                        "type": "string"
+                    },
+                    {
+                        "name": "User-Agent",
+                        "description": "Information is entered by the person or utility invoking the API. Choose between the default in your toolkit or custom create it. Being as descriptive as possible will help in identification and troubleshooting.",
+                        "required": false,
+                        "in": "header",
+                        "example": "FileService_Integration_V2.1",
+                        "type": "string"
+                    },
+                    {
+                        "name": "Authorization",
+                        "description": "The Quickbase authentication scheme you are using to authenticate the request, as described on the [authorization page](../auth).",
+                        "required": true,
+                        "in": "header",
+                        "example": "QB-USER-TOKEN xxxxxx_xxx_xxxxxxxxxxxxxxxxxxxxxxx",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "x-amf-mediaType": "application/json",
+                        "schema": {
+                            "example": {
+                                "record_id": 1,
+                                "filename": "QBL-0.4-30d92a39-5940-49b6-9eb1-c2966f85a7c0.yaml"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request. For example: Missing required headers, Missing required parameters, Malformed QBL and others. Message should provide more information, reach out to support if there\u2019s lack of clarity.",
+                        "x-amf-mediaType": "application/json",
+                        "schema": {
+                            "example": {
+                                "message": "Bad request.",
+                                "description": ""
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "A resource is missing. For example: The supplied solution or field does not exist.",
+                        "x-amf-mediaType": "application/json",
+                        "schema": {
+                            "example": {
+                                "message": "Not found.",
+                                "description": ""
+                            }
+                        }
+                    },
+                    "401/403": {
+                        "description": "Insufficient access. This could be for many reasons such as: User doesn\u2019t have SolutionHub access, User is not the owner or a contributor for the solution, User cannot create apps and others.  Message should provide more information.",
+                        "x-amf-mediaType": "application/json",
+                        "schema": {
+                            "example": {
+                                "message": "Forbidden.",
+                                "description": ""
+                            }
+                        }
+                    },
+                    "4xx/5xx": {
+                        "description": "Non-common error, reach out to support if there\u2019s lack of clarity.",
+                        "x-amf-mediaType": "application/json",
+                        "schema": {
+                            "example": {
+                                "message": "Internal server error.",
+                                "description": ""
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "Solutions"
+                ]
+            }
+        },
+        "/solutions/fromrecord": {
+            "get": {
+                "description": "Creates a solution using the QBL from the specified record.  \n We are releasing schema coverage for QBL in stages. See [what's supported today](https://helpv2.quickbase.com/hc/en-us/articles/30119680754068-QBL-version-0-4-overview) in our QBL documentation.",
+                "summary": "Create solution from record",
+                "operationId": "createSolutionFromRecord",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "tableId",
+                        "description": "The unique identifier (dbid) of the table.",
+                        "required": true,
+                        "in": "query",
+                        "example": "buirwys7m",
+                        "type": "string"
+                    },
+                    {
+                        "name": "fieldId",
+                        "description": "The unique identifier (fid) of the field. It needs to be a file attachment field.",
+                        "required": true,
+                        "in": "query",
+                        "example": "8",
+                        "type": "int"
+                    },
+                    {
+                        "name": "recordId",
+                        "description": "The unique identifier of the record.",
+                        "required": true,
+                        "in": "query",
+                        "example": "1",
+                        "type": "int"
+                    },
+                    {
+                        "name": "X-QBL-Errors-As-Success",
+                        "description": "If this header is set to true, the API will return a 207 status code even if there are errors. The errors will be returned in the response body.",
+                        "required": false,
+                        "in": "header",
+                        "example": "true",
+                        "type": "boolean"
+                    },
+                    {
+                        "name": "QB-Realm-Hostname",
+                        "description": "Your Quickbase domain, for example demo.quickbase.com",
+                        "required": true,
+                        "in": "header",
+                        "example": "demo.quickbase.com",
+                        "type": "string"
+                    },
+                    {
+                        "name": "User-Agent",
+                        "description": "Information is entered by the person or utility invoking the API. Choose between the default in your toolkit or custom create it. Being as descriptive as possible will help in identification and troubleshooting.",
+                        "required": false,
+                        "in": "header",
+                        "example": "FileService_Integration_V2.1",
+                        "type": "string"
+                    },
+                    {
+                        "name": "Authorization",
+                        "description": "The Quickbase authentication scheme you are using to authenticate the request, as described on the [authorization page](../auth).",
+                        "required": true,
+                        "in": "header",
+                        "example": "QB-USER-TOKEN xxxxxx_xxx_xxxxxxxxxxxxxxxxxxxxxxx",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "x-amf-mediaType": "application/json",
+                        "schema": {
+                            "example": {
+                                "solutionId": "f53acd36-1e75-47ed-910c-0ca4fd165a84",
+                                "alias": null,
+                                "createdResources": {
+                                    "apps": {
+                                        "$App_IT_Total_Management": "bt6i6jc39"
+                                    },
+                                    "pipelines": {}
+                                },
+                                "warnings": []
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request. For example: Missing required headers, Missing required parameters, Malformed QBL and others. Message should provide more information, reach out to support if there\u2019s lack of clarity.",
+                        "x-amf-mediaType": "application/json",
+                        "schema": {
+                            "example": {
+                                "message": "Bad request.",
+                                "description": ""
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "A resource is missing. For example: The supplied solution, field or record does not exist.",
+                        "x-amf-mediaType": "application/json",
+                        "schema": {
+                            "example": {
+                                "message": "Not found.",
+                                "description": ""
+                            }
+                        }
+                    },
+                    "401/403": {
+                        "description": "Insufficient access. This could be for many reasons such as: User doesn\u2019t have SolutionHub access, User is not the owner or a contributor for the solution, User cannot create apps and others.  Message should provide more information.",
+                        "x-amf-mediaType": "application/json",
+                        "schema": {
+                            "example": {
+                                "message": "Forbidden.",
+                                "description": ""
+                            }
+                        }
+                    },
+                    "4xx/5xx": {
+                        "description": "Non-common error, reach out to support if there\u2019s lack of clarity.",
+                        "x-amf-mediaType": "application/json",
+                        "schema": {
+                            "example": {
+                                "message": "Internal server error.",
+                                "description": ""
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "Solutions"
+                ]
+            }
+        },
+        "/solutions/{solutionId}/fromrecord": {
+            "get": {
+                "description": "Updates a solution using the QBL from the specified record.  \n We are releasing schema coverage for QBL in stages. See [what's supported today](https://helpv2.quickbase.com/hc/en-us/articles/30119680754068-QBL-version-0-4-overview) in our QBL documentation.",
+                "summary": "Update solution from record",
+                "operationId": "updateSolutionToRecord",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "solutionId",
+                        "description": "The unique identifier of the solution.",
+                        "required": true,
+                        "in": "path",
+                        "example": "f53acd36-1e75-47ed-910c-0ca4fd165a84",
+                        "type": "string"
+                    },
+                    {
+                        "name": "tableId",
+                        "description": "The unique identifier (dbid) of the table.",
+                        "required": true,
+                        "in": "query",
+                        "example": "buirwys7m",
+                        "type": "string"
+                    },
+                    {
+                        "name": "fieldId",
+                        "description": "The unique identifier (fid) of the field. It needs to be a file attachment field.",
+                        "required": true,
+                        "in": "query",
+                        "example": "8",
+                        "type": "int"
+                    },
+                    {
+                        "name": "recordId",
+                        "description": "The unique identifier of the record.",
+                        "required": true,
+                        "in": "query",
+                        "example": "1",
+                        "type": "int"
+                    },
+                    {
+                        "name": "X-QBL-Errors-As-Success",
+                        "description": "If this header is set to true, the API will return a 207 status code even if there are errors. The errors will be returned in the response body.",
+                        "required": false,
+                        "in": "header",
+                        "example": "true",
+                        "type": "boolean"
+                    },
+                    {
+                        "name": "QB-Realm-Hostname",
+                        "description": "Your Quickbase domain, for example demo.quickbase.com",
+                        "required": true,
+                        "in": "header",
+                        "example": "demo.quickbase.com",
+                        "type": "string"
+                    },
+                    {
+                        "name": "User-Agent",
+                        "description": "Information is entered by the person or utility invoking the API. Choose between the default in your toolkit or custom create it. Being as descriptive as possible will help in identification and troubleshooting.",
+                        "required": false,
+                        "in": "header",
+                        "example": "FileService_Integration_V2.1",
+                        "type": "string"
+                    },
+                    {
+                        "name": "Authorization",
+                        "description": "The Quickbase authentication scheme you are using to authenticate the request, as described on the [authorization page](../auth).",
+                        "required": true,
+                        "in": "header",
+                        "example": "QB-USER-TOKEN xxxxxx_xxx_xxxxxxxxxxxxxxxxxxxxxxx",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "x-amf-mediaType": "application/json",
+                        "schema": {
+                            "example": {
+                                "solutionId": "acfa89a2-5ec0-4552-ba69-1372e41288ea",
+                                "alias": null,
+                                "resources": {
+                                    "apps": {
+                                        "$App_IT_Total_Management": "bt6i6jc39"
+                                    },
+                                    "pipelines": {}
+                                },
+                                "warnings": []
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request. For example: Missing required headers, Missing required parameters, Malformed QBL and others. Message should provide more information, reach out to support if there\u2019s lack of clarity.",
+                        "x-amf-mediaType": "application/json",
+                        "schema": {
+                            "example": {
+                                "message": "Bad request.",
+                                "description": ""
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "A resource is missing. For example: The supplied solution, field or record does not exist.",
+                        "x-amf-mediaType": "application/json",
+                        "schema": {
+                            "example": {
+                                "message": "Not found.",
+                                "description": ""
+                            }
+                        }
+                    },
+                    "401/403": {
+                        "description": "Insufficient access. This could be for many reasons such as: User doesn\u2019t have SolutionHub access, User is not the owner or a contributor for the solution, User cannot create apps and others.  Message should provide more information.",
+                        "x-amf-mediaType": "application/json",
+                        "schema": {
+                            "example": {
+                                "message": "Forbidden.",
+                                "description": ""
+                            }
+                        }
+                    },
+                    "4xx/5xx": {
+                        "description": "Non-common error, reach out to support if there\u2019s lack of clarity.",
+                        "x-amf-mediaType": "application/json",
+                        "schema": {
+                            "example": {
+                                "message": "Internal server error.",
+                                "description": ""
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "Solutions"
+                ]
+            }
+        },
+        "/solutions/{solutionId}/changeset": {
+            "put": {
+                "description": "Returns a list of changes that would occur if the provided QBL were to be applied. Learn more about [QBL syntax](https://help.quickbase.com/hc/en-us/articles/24845511223828-What-is-QBL).  \n We are releasing schema coverage for QBL in stages. See [what's supported today](https://helpv2.quickbase.com/hc/en-us/articles/30119680754068-QBL-version-0-4-overview) in our QBL documentation.",
+                "summary": "List solution changes",
+                "operationId": "changesetSolution",
+                "consumes": [
+                    "application/x-yaml"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "solutionId",
+                        "description": "The unique identifier of the solution.",
+                        "required": true,
+                        "in": "path",
+                        "example": "f53acd36-1e75-47ed-910c-0ca4fd165a84",
+                        "type": "string"
+                    },
+                    {
+                        "name": "generated",
+                        "description": "The QBL to be used for the changeset.",
+                        "x-amf-mediaType": "application/x-yaml",
+                        "in": "body",
+                        "schema": {
+                            "example": "Version: 0.4\nResources:\n  $App_Example_app:\n    Type: QB::Application\n    Properties:\n      Name: Example app\n      Description: \n      AppColor: '#72509a'\n      Manager: manager@yourrealm.com\n      TableOrder: []\n      AppIcon: Application\n      CurrencySymbol: $\n      FiscalYearDesignation: Last\n      FirstDayOfWeek: Sun\n      DateFormat: MM-DD-YYYY\n      FirstMonthOfFiscalYear: Jan\n      CurrencySymbolPosition: Between\n      NumberFormat:\n        SeparatorStyle: CommaGroupingPeriodDecimal\n        SeparatorPlaces: none\n      DefaultViewMode: Auto\n      HideNewUpdatedIcons: false\n      DisableAllUsersSelection: false\n      CanCopyApp: Admin\n      CanExportData: Everyone\n      Searchable: false\n      RequireAppToken: true\n      ShowPerformanceBar: false\n      ShowPerformanceAnalyzer: false\n      GlobalSearchExactMatch: false\n      Utf8DataEncoding: false\n      Timezone: Default\n      Branding:\n        AppHeader:\n          HideQuickbaseStandardMenu: false\n        AppFooter: {}\n      RoleOrder:\n        - !Ref\n          Role: $Role_Viewer\n        - !Ref\n          Role: $Role_Participant\n        - !Ref\n          Role: $Role_Administrator\n    Roles:\n      $Role_Viewer:\n        Type: QB::Application::Role\n        Properties:\n          Name: Viewer\n          Description: \n          Default: false\n          ManageUsers: false\n          EditApp: false\n          DisableAccess: false\n          AppUI:\n            HideSettings: false\n            HideUsers: false\n            HideFavorites: false\n            HideSearch: false\n            HideHelp: false\n            HideTestAs: false\n          TableUI:\n            Global:\n              HideInBar: false\n              HideNewRecord: false\n              HideGridEdit: false\n              HideEmail: false\n              HidePrint: false\n              HideImportExport: false\n              HideSaveSpreadsheet: false\n              HideCreateCustomizeReport: false\n              HidePersonalSettings: false\n      $Role_Participant:\n        Type: QB::Application::Role\n        Properties:\n          Name: Participant\n          Description: \n          Default: true\n          ManageUsers: true\n          EditApp: false\n          DisableAccess: false\n          AppUI:\n            HideSettings: false\n            HideUsers: false\n            HideFavorites: false\n            HideSearch: false\n            HideHelp: false\n            HideTestAs: false\n          TableUI:\n            Global:\n              HideInBar: false\n              HideNewRecord: false\n              HideGridEdit: false\n              HideEmail: false\n              HidePrint: false\n              HideImportExport: false\n              HideSaveSpreadsheet: false\n              HideCreateCustomizeReport: false\n              HidePersonalSettings: false\n      $Role_Administrator:\n        Type: QB::Application::Role\n        Properties:\n          Name: Administrator\n          Description: \n          Default: false\n          ManageUsers: true\n          EditApp: true\n          DisableAccess: false\n          AppUI:\n            HideSettings: false\n            HideUsers: false\n            HideFavorites: false\n            HideSearch: false\n            HideHelp: false\n            HideTestAs: false\n          TableUI:\n            Global:\n              HideInBar: false\n              HideNewRecord: false\n              HideGridEdit: false\n              HideEmail: false\n              HidePrint: false\n              HideImportExport: false\n              HideSaveSpreadsheet: false\n              HideCreateCustomizeReport: false\n              HidePersonalSettings: false"
+                        }
+                    },
+                    {
+                        "name": "X-QBL-Errors-As-Success",
+                        "description": "If this header is set to true, the API will return a 207 status code even if there are errors. The errors will be returned in the response body.",
+                        "required": false,
+                        "in": "header",
+                        "example": "true",
+                        "type": "boolean"
+                    },
+                    {
+                        "name": "QB-Realm-Hostname",
+                        "description": "Your Quickbase domain, for example demo.quickbase.com",
+                        "required": true,
+                        "in": "header",
+                        "example": "demo.quickbase.com",
+                        "type": "string"
+                    },
+                    {
+                        "name": "User-Agent",
+                        "description": "Information is entered by the person or utility invoking the API. Choose between the default in your toolkit or custom create it. Being as descriptive as possible will help in identification and troubleshooting.",
+                        "required": false,
+                        "in": "header",
+                        "example": "FileService_Integration_V2.1",
+                        "type": "string"
+                    },
+                    {
+                        "name": "Authorization",
+                        "description": "The Quickbase authentication scheme you are using to authenticate the request, as described on the [authorization page](../auth).",
+                        "required": true,
+                        "in": "header",
+                        "example": "QB-USER-TOKEN xxxxxx_xxx_xxxxxxxxxxxxxxxxxxxxxxx",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "x-amf-mediaType": "application/json",
+                        "schema": {
+                            "example": {
+                                "id": "f53acd36-1e75-47ed-910c-0ca4fd165a84",
+                                "changes": [
+                                    {
+                                        "logicalType": "App",
+                                        "logicalId": "$App_Example_app",
+                                        "action": "Add",
+                                        "path": [
+                                            "$App_Example_app"
+                                        ]
+                                    },
+                                    {
+                                        "logicalType": "App",
+                                        "logicalId": "$App_Simple_Project_Manager",
+                                        "action": "Remove",
+                                        "path": [
+                                            "$App_Simple_Project_Manager"
+                                        ]
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request. For example: Missing required headers, Missing required parameters, Malformed QBL and others. Message should provide more information, reach out to support if there\u2019s lack of clarity.",
+                        "x-amf-mediaType": "application/json",
+                        "schema": {
+                            "example": {
+                                "message": "Bad request.",
+                                "description": ""
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Solution does not exist. The supplied solution ID was not found.",
+                        "x-amf-mediaType": "application/json",
+                        "schema": {
+                            "example": {
+                                "message": "Not found.",
+                                "description": ""
+                            }
+                        }
+                    },
+                    "401/403": {
+                        "description": "Insufficient access. This could be for many reasons such as: User doesn\u2019t have SolutionHub access, User is not the owner or a contributor for the solution, User cannot create apps and others.  Message should provide more information.",
+                        "x-amf-mediaType": "application/json",
+                        "schema": {
+                            "example": {
+                                "message": "Forbidden.",
+                                "description": ""
+                            }
+                        }
+                    },
+                    "4xx/5xx": {
+                        "description": "Non-common error, reach out to support if there\u2019s lack of clarity.",
+                        "x-amf-mediaType": "application/json",
+                        "schema": {
+                            "example": {
+                                "message": "Internal server error.",
+                                "description": ""
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "Solutions"
+                ]
+            }
+        },
+        "/solutions/{solutionId}/changeset/fromrecord": {
+            "get": {
+                "description": "Returns a list of changes that would occur if the QBL from the provided record were to be applied.  \n We are releasing schema coverage for QBL in stages. See [what's supported today](https://helpv2.quickbase.com/hc/en-us/articles/30119680754068-QBL-version-0-4-overview) in our QBL documentation.",
+                "summary": "List solution changes from record",
+                "operationId": "changesetSolutionFromRecord",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "solutionId",
+                        "description": "The unique identifier of the solution.",
+                        "required": true,
+                        "in": "path",
+                        "example": "f53acd36-1e75-47ed-910c-0ca4fd165a84",
+                        "type": "string"
+                    },
+                    {
+                        "name": "tableId",
+                        "description": "The unique identifier (dbid) of the table.",
+                        "required": true,
+                        "in": "query",
+                        "example": "buirwys7m",
+                        "type": "string"
+                    },
+                    {
+                        "name": "fieldId",
+                        "description": "The unique identifier (fid) of the field. It needs to be a file attachment field.",
+                        "required": true,
+                        "in": "query",
+                        "example": "8",
+                        "type": "int"
+                    },
+                    {
+                        "name": "recordId",
+                        "description": "The unique identifier of the record.",
+                        "required": true,
+                        "in": "query",
+                        "example": "1",
+                        "type": "int"
+                    },
+                    {
+                        "name": "X-QBL-Errors-As-Success",
+                        "description": "If this header is set to true, the API will return a 207 status code even if there are errors. The errors will be returned in the response body.",
+                        "required": false,
+                        "in": "header",
+                        "example": "true",
+                        "type": "boolean"
+                    },
+                    {
+                        "name": "QB-Realm-Hostname",
+                        "description": "Your Quickbase domain, for example demo.quickbase.com",
+                        "required": true,
+                        "in": "header",
+                        "example": "demo.quickbase.com",
+                        "type": "string"
+                    },
+                    {
+                        "name": "User-Agent",
+                        "description": "Information is entered by the person or utility invoking the API. Choose between the default in your toolkit or custom create it. Being as descriptive as possible will help in identification and troubleshooting.",
+                        "required": false,
+                        "in": "header",
+                        "example": "FileService_Integration_V2.1",
+                        "type": "string"
+                    },
+                    {
+                        "name": "Authorization",
+                        "description": "The Quickbase authentication scheme you are using to authenticate the request, as described on the [authorization page](../auth).",
+                        "required": true,
+                        "in": "header",
+                        "example": "QB-USER-TOKEN xxxxxx_xxx_xxxxxxxxxxxxxxxxxxxxxxx",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "x-amf-mediaType": "application/json",
+                        "schema": {
+                            "example": {
+                                "id": "f53acd36-1e75-47ed-910c-0ca4fd165a84",
+                                "changes": [
+                                    {
+                                        "logicalType": "Property",
+                                        "logicalId": "App::$App_MVP_App_234::Property::Name",
+                                        "action": "Update",
+                                        "path": [
+                                            "$App_MVP_App_234",
+                                            "Name"
+                                        ]
+                                    },
+                                    {
+                                        "logicalType": "Table",
+                                        "logicalId": "$Table_Parents",
+                                        "action": "Remove",
+                                        "path": [
+                                            "$App_MVP_App_234",
+                                            "$Table_Parents"
+                                        ]
+                                    },
+                                    {
+                                        "logicalType": "Table",
+                                        "logicalId": "$Table_Children",
+                                        "action": "Remove",
+                                        "path": [
+                                            "$App_MVP_App_234",
+                                            "$Table_Children"
+                                        ]
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request. For example: Missing required headers, Missing required parameters, Malformed QBL and others. Message should provide more information, reach out to support if there\u2019s lack of clarity.",
+                        "x-amf-mediaType": "application/json",
+                        "schema": {
+                            "example": {
+                                "message": "Bad request.",
+                                "description": ""
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "A resource is missing. For example: The supplied solution, field or record does not exist.",
+                        "x-amf-mediaType": "application/json",
+                        "schema": {
+                            "example": {
+                                "message": "Not found.",
+                                "description": ""
+                            }
+                        }
+                    },
+                    "401/403": {
+                        "description": "Insufficient access. This could be for many reasons such as: User doesn\u2019t have SolutionHub access, User is not the owner or a contributor for the solution, User cannot create apps and others.  Message should provide more information.",
+                        "x-amf-mediaType": "application/json",
+                        "schema": {
+                            "example": {
+                                "message": "Forbidden.",
+                                "description": ""
+                            }
+                        }
+                    },
+                    "4xx/5xx": {
+                        "description": "Non-common error, reach out to support if there\u2019s lack of clarity.",
+                        "x-amf-mediaType": "application/json",
+                        "schema": {
+                            "example": {
+                                "message": "Internal server error.",
+                                "description": ""
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "Solutions"
+                ]
+            }
+        }
+    }
+}

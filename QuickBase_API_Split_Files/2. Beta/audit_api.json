@@ -1,0 +1,277 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "title": "Quick Base API",
+        "version": "1.0.0"
+    },
+    "host": "api.quickbase.com/v1",
+    "basePath": "/",
+    "schemes": [
+        "https"
+    ],
+    "paths": {
+        "/audit": {
+            "post": {
+                "description": "Gathers the audit logs for a single day from a realm. By default, this API returns 10,000 entries. This can be changed with the numRows parameter. Integrators can iterate through batches to get an entire day's worth of logs. Each realm has a maximum entitlement of querying 1,000 days per year (allowing lookbacks for up to two years). Requests for paginated data do not count towards the annual limit. Transactional rate limits are 10 per 10 seconds.  \n**Note:** This API is available for enterprise users only.",
+                "summary": "Get audit logs",
+                "operationId": "audit",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "QB-Realm-Hostname",
+                        "description": "Your Quickbase domain, for example demo.quickbase.com",
+                        "required": true,
+                        "in": "header",
+                        "example": "demo.quickbase.com",
+                        "type": "string"
+                    },
+                    {
+                        "name": "User-Agent",
+                        "description": "This is entered by the person or utility invoking the API. You might custom create this or use the default one of your toolkit. Being descriptive here may offer more identification and troubleshooting capabilities.",
+                        "required": false,
+                        "in": "header",
+                        "example": "FileService_Integration_V2.1",
+                        "type": "string"
+                    },
+                    {
+                        "name": "Authorization",
+                        "description": "The Quickbase authentication scheme you are using to authenticate the request, as described on the [authorization page](../auth).",
+                        "required": true,
+                        "in": "header",
+                        "example": "QB-USER-TOKEN xxxxxx_xxx_xxxxxxxxxxxxxxxxxxxxxxx",
+                        "type": "string"
+                    },
+                    {
+                        "x-amf-mediaType": "application/json",
+                        "in": "body",
+                        "name": "generated",
+                        "schema": {
+                            "example": {
+                                "date": "2022-05-20",
+                                "topics": [
+                                    "login",
+                                    "login_fail"
+                                ]
+                            },
+                            "type": "object",
+                            "additionalProperties": false,
+                            "properties": {
+                                "nextToken": {
+                                    "description": "Token specifying start of page. For first page don't supply this.",
+                                    "example": "6a.f12x",
+                                    "type": "string"
+                                },
+                                "numRows": {
+                                    "description": "Number of logs to return per page, default is 10000, minimum is 1000, max is 50000.",
+                                    "example": 10000,
+                                    "type": "integer"
+                                },
+                                "queryId": {
+                                    "description": "The query id of an audit log request. This id is needed to fetch subsequent paged results of a single query.",
+                                    "example": "c41aa90e-0db6-4732-8e22-2ef80fe4092a",
+                                    "type": "string"
+                                },
+                                "date": {
+                                    "description": "The date for which audit logs need to be fetched. This must be date-time only, as YYYY-MM-DD, and a valid date in the past.",
+                                    "example": "2022-05-23",
+                                    "type": "string",
+                                    "format": "date"
+                                },
+                                "topics": {
+                                    "type": "array",
+                                    "maxItems": 20,
+                                    "description": "An array that may contain up to 20 [topics](https://resources.quickbase.com/nav/app/budurkasx/action/showpage/2b2941e4-f34d-4d41-9b0e-db790d20e9ab?pageIdV2=quickbase.com-DashboardGroup-15760d74-2243-4ce9-9495-7cc8790f12e7) to filter by. If empty, all topics are returned.",
+                                    "items": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Query ran successfully and has returned the events for the given time period.",
+                        "x-amf-mediaType": "application/json",
+                        "schema": {
+                            "example": {
+                                "events": [
+                                    {
+                                        "firstname": "Jon",
+                                        "lastname": "Doe",
+                                        "email": "jdoe@quickbase.com",
+                                        "ipaddress": "65.219.241.162",
+                                        "application": "UI",
+                                        "resourceurl": "https://demo.quickbase.com/db/bpqe82s1",
+                                        "sessioninfo": "Session ID: 17245317",
+                                        "useragent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_4) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.1 Safari/605.1.15",
+                                        "topic": "app_dashboard_access",
+                                        "description": "Jon Doe accessed the app dashboard in app Projects",
+                                        "id": "I3g8gm2cmh-1",
+                                        "time": "2020-04-21T14:41:51.886Z"
+                                    }
+                                ],
+                                "nextToken": "6a.f12x",
+                                "queryId": "797c0726-f8f4-4df9-883f-c7e8cbdf2f77.ALtInpuyQeBoW+fWrAqLrjPGqDqPl++IMb3bOxlmoF4="
+                            },
+                            "type": "object",
+                            "additionalProperties": true,
+                            "required": [
+                                "queryId"
+                            ],
+                            "properties": {
+                                "queryId": {
+                                    "description": "Query id of the requested audit log.",
+                                    "type": "string"
+                                },
+                                "events": {
+                                    "description": "All events of the audit log.",
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "additionalProperties": true,
+                                        "required": [
+                                            "id",
+                                            "firstname",
+                                            "lastname",
+                                            "email",
+                                            "topic",
+                                            "time",
+                                            "ipaddress",
+                                            "useragent",
+                                            "application",
+                                            "description"
+                                        ],
+                                        "properties": {
+                                            "id": {
+                                                "description": "Log ID.",
+                                                "type": "string"
+                                            },
+                                            "firstname": {
+                                                "description": "User's first name.",
+                                                "type": "string"
+                                            },
+                                            "lastname": {
+                                                "description": "User's last name.",
+                                                "type": "string"
+                                            },
+                                            "email": {
+                                                "description": "User's email address.",
+                                                "type": "string"
+                                            },
+                                            "topic": {
+                                                "description": "What action was taken, such as log in, create app, report access, or table search.",
+                                                "type": "string"
+                                            },
+                                            "time": {
+                                                "description": "Exact time the action was taken, including date, and time with hour, minutes and seconds. Time zone is the browser time zone.",
+                                                "type": "string"
+                                            },
+                                            "ipaddress": {
+                                                "description": "The IP address the action was taken from.",
+                                                "type": "string"
+                                            },
+                                            "useragent": {
+                                                "description": "The browser and OS the action was taken from.",
+                                                "type": "string"
+                                            },
+                                            "application": {
+                                                "description": "UI for user interface or API for an API call.",
+                                                "type": "string"
+                                            },
+                                            "description": {
+                                                "description": "A brief description of the action that you can click to see additional details.",
+                                                "type": "string"
+                                            },
+                                            "payloadChanges": {
+                                                "description": "The data changes that have occured to a field that has been marked as audited.",
+                                                "type": "object",
+                                                "additionalProperties": true,
+                                                "required": [
+                                                    "changes",
+                                                    "rid",
+                                                    "changeType",
+                                                    "type"
+                                                ],
+                                                "properties": {
+                                                    "changes": {
+                                                        "description": "An object describing the changes that occured on record changes.",
+                                                        "type": "object",
+                                                        "additionalProperties": true,
+                                                        "required": [
+                                                            "current",
+                                                            "previous",
+                                                            "fields"
+                                                        ],
+                                                        "properties": {
+                                                            "current": {
+                                                                "description": "The current value of the fields that have been changed.",
+                                                                "type": "array"
+                                                            },
+                                                            "previous": {
+                                                                "description": "The previous value of the fields that have been changed.",
+                                                                "type": "array"
+                                                            },
+                                                            "fields": {
+                                                                "description": "The list of fields and their types that have been changed.",
+                                                                "type": "array"
+                                                            }
+                                                        }
+                                                    },
+                                                    "rid": {
+                                                        "description": "The recordId that has been edited.",
+                                                        "type": "integer"
+                                                    },
+                                                    "changeType": {
+                                                        "description": "The change type that occured for a record. Could be one of add, edit, delete.",
+                                                        "type": "string"
+                                                    },
+                                                    "type": {
+                                                        "description": "A placeholder for type changes.",
+                                                        "type": "string"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                },
+                                "nextToken": {
+                                    "description": "Token to fetch the next 1000 logs.",
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "202": {
+                        "description": "Query still being processed. Pass the queryId back to the API to check for results.",
+                        "x-amf-mediaType": "application/json",
+                        "schema": {
+                            "example": {
+                                "queryId": "797c0726-f8f4-4df9-883f-c7e8cbdf2f77.ALtInpuyQeBoW+fWrAqLrjPGqDqPl++IMb3bOxlmoF4="
+                            },
+                            "type": "object",
+                            "additionalProperties": true,
+                            "required": [
+                                "queryId"
+                            ],
+                            "properties": {
+                                "queryId": {
+                                    "description": "Query id of the requested audit log.",
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "Audit"
+                ]
+            }
+        }
+    }
+}

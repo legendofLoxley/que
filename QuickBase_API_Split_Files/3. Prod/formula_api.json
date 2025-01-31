@@ -1,0 +1,109 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "title": "Quick Base API",
+        "version": "1.0.0"
+    },
+    "host": "api.quickbase.com/v1",
+    "basePath": "/",
+    "schemes": [
+        "https"
+    ],
+    "paths": {
+        "/formula/run": {
+            "post": {
+                "description": "Allows running a formula via an API call. Use this method in custom code to get the value back of a formula without a discrete field on a record.",
+                "summary": "Run a formula",
+                "operationId": "runFormula",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "QB-Realm-Hostname",
+                        "description": "Your Quickbase domain, for example demo.quickbase.com",
+                        "required": true,
+                        "in": "header",
+                        "example": "demo.quickbase.com",
+                        "type": "string"
+                    },
+                    {
+                        "name": "User-Agent",
+                        "description": "This is entered by the person or utility invoking the API. You might custom create this or use the default one of your toolkit. Being descriptive here may offer more identification and troubleshooting capabilities.",
+                        "required": false,
+                        "in": "header",
+                        "example": "FileService_Integration_V2.1",
+                        "type": "string"
+                    },
+                    {
+                        "name": "Authorization",
+                        "description": "The Quickbase authentication scheme you are using to authenticate the request, as described on the [authorization page](../auth).",
+                        "required": true,
+                        "in": "header",
+                        "example": "QB-USER-TOKEN xxxxxx_xxx_xxxxxxxxxxxxxxxxxxxxxxx",
+                        "type": "string"
+                    },
+                    {
+                        "x-amf-mediaType": "application/json",
+                        "in": "body",
+                        "name": "generated",
+                        "schema": {
+                            "description": "The following example will execute a Sum() for '20' and the value in a record with id 1 for the field with label 'NumericField'. Since this API is able to run any type of formula, all results will be returned as a string.",
+                            "example": {
+                                "from": "bck7gp3q2",
+                                "formula": "Sum([NumericField],20)",
+                                "rid": 1
+                            },
+                            "type": "object",
+                            "additionalProperties": false,
+                            "required": [
+                                "formula",
+                                "from"
+                            ],
+                            "properties": {
+                                "formula": {
+                                    "description": "The formula to run. This must be a valid Quickbase formula.",
+                                    "type": "string"
+                                },
+                                "rid": {
+                                    "description": "The record ID to run the formula against. Only necessary for formulas that are run in the context of a record. For example, the formula User() does not need a record ID.",
+                                    "type": "integer"
+                                },
+                                "from": {
+                                    "description": "The unique identifier (dbid) of the table.",
+                                    "example": "bck7gp3q2",
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "x-amf-mediaType": "application/json",
+                        "schema": {
+                            "example": {
+                                "result": "30"
+                            },
+                            "type": "object",
+                            "additionalProperties": true,
+                            "properties": {
+                                "result": {
+                                    "description": "The formula execution result.",
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "Formulas"
+                ]
+            }
+        }
+    }
+}

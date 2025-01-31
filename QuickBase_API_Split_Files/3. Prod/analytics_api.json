@@ -1,0 +1,490 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "title": "Quick Base API",
+        "version": "1.0.0"
+    },
+    "host": "api.quickbase.com/v1",
+    "basePath": "/",
+    "schemes": [
+        "https"
+    ],
+    "paths": {
+        "/analytics/reads": {
+            "get": {
+                "description": "Get user read and integration read summaries for any day in the past.  \n**Note:** This API is available for enterprise users only.",
+                "summary": "Get read summaries",
+                "operationId": "platformAnalyticReads",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "day",
+                        "description": "The date for which read summaries need to be fetched. This must be date-time only, as YYYY-MM-DD, and a valid date in the past.",
+                        "required": false,
+                        "in": "query",
+                        "example": "2022-05-23",
+                        "type": "string",
+                        "format": "date"
+                    },
+                    {
+                        "name": "QB-Realm-Hostname",
+                        "description": "Your Quickbase domain, for example demo.quickbase.com",
+                        "required": true,
+                        "in": "header",
+                        "example": "demo.quickbase.com",
+                        "type": "string"
+                    },
+                    {
+                        "name": "User-Agent",
+                        "description": "This is entered by the person or utility invoking the API. You might custom create this or use the default one of your toolkit. Being descriptive here may offer more identification and troubleshooting capabilities.",
+                        "required": false,
+                        "in": "header",
+                        "example": "FileService_Integration_V2.1",
+                        "type": "string"
+                    },
+                    {
+                        "name": "Authorization",
+                        "description": "The Quickbase authentication scheme you are using to authenticate the request, as described on the [authorization page](../auth).",
+                        "required": true,
+                        "in": "header",
+                        "example": "QB-USER-TOKEN xxxxxx_xxx_xxxxxxxxxxxxxxxxxxxxxxx",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Summaries returned succesfully",
+                        "x-amf-mediaType": "application/json",
+                        "schema": {
+                            "example": {
+                                "date": "2022-01-01",
+                                "reads": {
+                                    "integrations": {
+                                        "api": 456,
+                                        "eoti": 789,
+                                        "pipelines": 432
+                                    },
+                                    "user": 123
+                                }
+                            },
+                            "type": "object",
+                            "additionalProperties": true,
+                            "required": [
+                                "date",
+                                "reads"
+                            ],
+                            "properties": {
+                                "date": {
+                                    "description": "The date of the requested summary.",
+                                    "type": "string",
+                                    "format": "date"
+                                },
+                                "reads": {
+                                    "description": "Total reads for the specified date.",
+                                    "type": "object",
+                                    "additionalProperties": true,
+                                    "required": [
+                                        "user",
+                                        "integrations"
+                                    ],
+                                    "properties": {
+                                        "user": {
+                                            "description": "Total user reads for the realm on the specified date.",
+                                            "type": "integer"
+                                        },
+                                        "integrations": {
+                                            "description": "Total integration reads for the realm on the specified date.",
+                                            "type": "object",
+                                            "additionalProperties": true,
+                                            "required": [
+                                                "eoti",
+                                                "api",
+                                                "pipelines"
+                                            ],
+                                            "properties": {
+                                                "eoti": {
+                                                    "description": "Total reads by anonymous users for the realm on the specified date.",
+                                                    "type": "integer"
+                                                },
+                                                "api": {
+                                                    "description": "Total API reads for the realm on the specified date.",
+                                                    "type": "integer"
+                                                },
+                                                "pipelines": {
+                                                    "description": "Total pipeline reads for the realm on the specified date.",
+                                                    "type": "integer"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "Platform Analytics"
+                ]
+            }
+        },
+        "/analytics/events/summaries": {
+            "post": {
+                "tags": [
+                    "Platform Analytics"
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "description": "Your Quickbase domain, for example demo.quickbase.com.",
+                        "in": "header",
+                        "name": "QB-Realm-Hostname",
+                        "required": true,
+                        "type": "string",
+                        "example": "demo.quickbase.com"
+                    },
+                    {
+                        "description": "This is entered by the person or utility invoking the API. You might custom create this or use the default one of your toolkit. Being descriptive here may offer more identification and troubleshooting capabilities.",
+                        "in": "header",
+                        "name": "User-Agent",
+                        "type": "string",
+                        "example": "FileService_Integration_V2.1"
+                    },
+                    {
+                        "description": "The Quickbase authentication scheme you are using to authenticate the request, as described on the [authorization page](../auth).",
+                        "in": "header",
+                        "name": "Authorization",
+                        "required": true,
+                        "type": "string",
+                        "example": "QB-USER-TOKEN xxxxxx_xxx_xxxxxxxxxxxxxxxxxxxxxxx"
+                    },
+                    {
+                        "description": "The ID of the account to query. If no value is specified, the first account matching the provided domain is chosen.",
+                        "in": "query",
+                        "name": "accountId",
+                        "type": "number",
+                        "example": "1234"
+                    },
+                    {
+                        "in": "body",
+                        "x-amf-mediaType": "application/json",
+                        "name": "generated",
+                        "schema": {
+                            "example": {
+                                "start": "2023-12-01T12:00:00.000-05:00",
+                                "end": "2023-12-31T12:00:00.000-05:00",
+                                "groupBy": "user",
+                                "nextToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJvZmZzZXQiOjEwMCwiaWF0IjoxNzA2NzE1OTI3LCJleHAiOjE3MDY4MDIzMjd9.aWGZCv5vJIai0Dw6sVcQ9FT70PHcqWcqP9sGdKBJeco",
+                                "where": [
+                                    {
+                                        "id": "58351651.xc1",
+                                        "type": "user"
+                                    },
+                                    {
+                                        "id": "bpqe82s1",
+                                        "type": "app"
+                                    }
+                                ]
+                            },
+                            "properties": {
+                                "start": {
+                                    "description": "The start date and time of the requested summaries in ISO 8601 time format.",
+                                    "format": "date-time",
+                                    "type": "string"
+                                },
+                                "end": {
+                                    "description": "The end date and time of the requested summaries in ISO 8601 time format.",
+                                    "format": "date-time",
+                                    "type": "string"
+                                },
+                                "groupBy": {
+                                    "description": "How the events should be grouped.",
+                                    "enum": [
+                                        "app",
+                                        "user"
+                                    ],
+                                    "type": "string"
+                                },
+                                "nextToken": {
+                                    "description": "A pagination token from a previous response. Used to fetch the next page.",
+                                    "type": "string"
+                                },
+                                "where": {
+                                    "description": "A list of items to filter events by. Only events which match ALL criteria will be included in the results.",
+                                    "items": {
+                                        "properties": {
+                                            "id": {
+                                                "description": "Id of the item to filter by - the hash uid if filtering a user, or the app id if filtering an app.",
+                                                "type": "string"
+                                            },
+                                            "type": {
+                                                "description": "The type of item to filter by.",
+                                                "enum": [
+                                                    "app",
+                                                    "user"
+                                                ],
+                                                "type": "string"
+                                            }
+                                        },
+                                        "required": [
+                                            "id",
+                                            "type"
+                                        ],
+                                        "type": "object"
+                                    },
+                                    "maxItems": 10,
+                                    "type": "array"
+                                }
+                            },
+                            "required": [
+                                "start",
+                                "end",
+                                "groupBy"
+                            ],
+                            "type": "object"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Event summaries returned succesfully",
+                        "schema": {
+                            "example": {
+                                "accountId": "1234",
+                                "start": "2023-12-01T05:00:00Z",
+                                "end": "2023-12-31T05:00:00Z",
+                                "groupBy": "user",
+                                "where": [
+                                    {
+                                        "id": "58351651.xc1",
+                                        "type": "user"
+                                    },
+                                    {
+                                        "id": "bpqe82s1",
+                                        "type": "app"
+                                    }
+                                ],
+                                "results": [
+                                    {
+                                        "id": "58351651.xc1",
+                                        "name": "Jon Doe",
+                                        "eventTypes": [
+                                            {
+                                                "billingCategory": "integration",
+                                                "count": 794,
+                                                "eventType": "api"
+                                            },
+                                            {
+                                                "billingCategory": "integration",
+                                                "count": 0,
+                                                "eventType": "eoti"
+                                            },
+                                            {
+                                                "billingCategory": "integration",
+                                                "count": 203,
+                                                "eventType": "stepruns"
+                                            },
+                                            {
+                                                "billingCategory": "user",
+                                                "count": 0,
+                                                "eventType": "plugin"
+                                            },
+                                            {
+                                                "billingCategory": "user",
+                                                "count": 36,
+                                                "eventType": "appDashboard"
+                                            },
+                                            {
+                                                "billingCategory": "user",
+                                                "count": 0,
+                                                "eventType": "tableDashboard"
+                                            },
+                                            {
+                                                "billingCategory": "user",
+                                                "count": 419,
+                                                "eventType": "form"
+                                            },
+                                            {
+                                                "billingCategory": "user",
+                                                "count": 0,
+                                                "eventType": "report"
+                                            }
+                                        ]
+                                    }
+                                ],
+                                "metadata": {
+                                    "nextToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJvZmZzZXQiOjEwMCwiaWF0IjoxNzA2NzE1OTI3LCJleHAiOjE3MDY4MDIzMjd9.aWGZCv5vJIai0Dw6sVcQ9FT70PHcqWcqP9sGdKBJeco"
+                                },
+                                "totals": {
+                                    "all": 1452,
+                                    "integration": 997,
+                                    "user": 455
+                                }
+                            },
+                            "properties": {
+                                "accountId": {
+                                    "description": "The ID of the account the events are associated with.",
+                                    "type": "string"
+                                },
+                                "start": {
+                                    "description": "The start date and time of the requested summaries in ISO 8601 time format.",
+                                    "format": "date-time",
+                                    "type": "string"
+                                },
+                                "end": {
+                                    "description": "The end date and time of the requested summaries in ISO 8601 time format.",
+                                    "format": "date-time",
+                                    "type": "string"
+                                },
+                                "groupBy": {
+                                    "description": "How the events should be grouped.",
+                                    "enum": [
+                                        "app",
+                                        "user"
+                                    ],
+                                    "type": "string"
+                                },
+                                "where": {
+                                    "items": {
+                                        "properties": {
+                                            "id": {
+                                                "description": "Id of the item to filter by.",
+                                                "type": "string"
+                                            },
+                                            "type": {
+                                                "description": "The type of item to filter by.",
+                                                "enum": [
+                                                    "app",
+                                                    "user"
+                                                ],
+                                                "type": "string"
+                                            }
+                                        },
+                                        "required": [
+                                            "id",
+                                            "type"
+                                        ],
+                                        "type": "object"
+                                    },
+                                    "type": "array"
+                                },
+                                "results": {
+                                    "description": "An array of objects that contains Application/User information and an events object with summaries by event type.",
+                                    "items": {
+                                        "properties": {
+                                            "eventTypes": {
+                                                "description": "An array of events that contains specific information associated with an Application/User broken down by event type.",
+                                                "items": {
+                                                    "properties": {
+                                                        "billingCategory": {
+                                                            "description": "Billing category of the event type.",
+                                                            "enum": [
+                                                                "user",
+                                                                "integration"
+                                                            ],
+                                                            "type": "string"
+                                                        },
+                                                        "count": {
+                                                            "description": "Count of events associated with that event type and Application/User.",
+                                                            "type": "integer"
+                                                        },
+                                                        "eventType": {
+                                                            "description": "Event type",
+                                                            "type": "string"
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                },
+                                                "type": "array"
+                                            },
+                                            "id": {
+                                                "description": "Id of the Application/User.",
+                                                "type": "string"
+                                            },
+                                            "name": {
+                                                "description": "Name of the Application/User.",
+                                                "type": "string"
+                                            },
+                                            "totals": {
+                                                "description": "Totals by billing category for the event grouping.",
+                                                "properties": {
+                                                    "all": {
+                                                        "type": "number"
+                                                    },
+                                                    "integration": {
+                                                        "type": "number"
+                                                    },
+                                                    "user": {
+                                                        "type": "number"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        },
+                                        "required": [
+                                            "id",
+                                            "name",
+                                            "totals",
+                                            "eventTypes"
+                                        ],
+                                        "type": "object"
+                                    },
+                                    "type": "array"
+                                },
+                                "metadata": {
+                                    "description": "Additional information about the results that may be helpful.",
+                                    "properties": {
+                                        "nextToken": {
+                                            "description": "Supply this token in a subsequent request to fetch the next page of results.",
+                                            "type": "string"
+                                        }
+                                    },
+                                    "required": [
+                                        "nextToken"
+                                    ],
+                                    "type": "object"
+                                },
+                                "totals": {
+                                    "description": "Totals by billing category for all queried events.",
+                                    "properties": {
+                                        "all": {
+                                            "type": "number"
+                                        },
+                                        "integration": {
+                                            "type": "number"
+                                        },
+                                        "user": {
+                                            "type": "number"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            },
+                            "required": [
+                                "accountId",
+                                "start",
+                                "end",
+                                "groupBy",
+                                "where",
+                                "results"
+                            ],
+                            "type": "object"
+                        }
+                    }
+                },
+                "description": "Get event summaries for any span of days up to one year and excluding future dates.  \n**Note:** This API is available for enterprise users only. Data is updated hourly; to ensure accuracy, query dates should be at least one hour in the past. Transactional rate limits are 100 per hour.",
+                "operationId": "platformAnalyticEventSummaries",
+                "summary": "Get event summaries"
+            }
+        }
+    }
+}
