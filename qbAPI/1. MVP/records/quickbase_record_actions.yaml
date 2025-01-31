@@ -1,0 +1,209 @@
+openapi: 3.1.0
+info:
+  title: Quickbase Records API
+  version: 1.0.0
+  description: Core operations for managing Quickbase records
+
+servers:
+  - url: https://api.quickbase.com/v1
+    description: Quickbase API server
+
+components:
+  schemas: {}
+  securitySchemes:
+    QuickbaseAuth:
+      type: apiKey
+      name: X-Api-Key
+      in: header
+      description: Your Quickbase user token (QB-USER-TOKEN format)
+
+security:
+  - QuickbaseAuth: []
+
+paths:
+  /records:
+    post:
+      operationId: upsertRecords
+      summary: Insert or update records
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - to
+                - data
+              properties:
+                to:
+                  type: string
+                  description: The table identifier
+                data:
+                  type: array
+                  description: Array of records to insert/update
+                  items:
+                    type: object
+                    additionalProperties: true
+                fieldsToReturn:
+                  type: array
+                  description: Field IDs to return in the response
+                  items:
+                    type: integer
+      responses:
+        '200':
+          description: Records created/updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      additionalProperties: true
+                  metadata:
+                    type: object
+                    properties:
+                      createdRecordIds:
+                        type: array
+                        items:
+                          type: integer
+                      updatedRecordIds:
+                        type: array
+                        items:
+                          type: integer
+                      unchangedRecordIds:
+                        type: array
+                        items:
+                          type: integer
+                      totalNumberOfRecordsProcessed:
+                        type: integer
+
+    delete:
+      operationId: deleteRecords
+      summary: Delete records
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - from
+                - where
+              properties:
+                from:
+                  type: string
+                  description: The table identifier
+                where:
+                  type: string
+                  description: Filter condition for records to delete
+      responses:
+        '200':
+          description: Records deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  numberDeleted:
+                    type: integer
+                    description: Number of records deleted
+
+  /records/query:
+    post:
+      operationId: queryRecords
+      summary: Query records
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - from
+              properties:
+                from:
+                  type: string
+                  description: The table identifier
+                select:
+                  type: array
+                  description: Field IDs to return
+                  items:
+                    type: integer
+                where:
+                  type: string
+                  description: Filter condition
+                sortBy:
+                  oneOf:
+                    - type: array
+                      items:
+                        type: object
+                        properties:
+                          fieldId:
+                            type: integer
+                          order:
+                            type: string
+                            enum: [ASC, DESC]
+                    - type: boolean
+                groupBy:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      fieldId:
+                        type: integer
+                      grouping:
+                        type: string
+                        enum: [equal-values]
+                options:
+                  type: object
+                  properties:
+                    skip:
+                      type: integer
+                    top:
+                      type: integer
+                    compareWithAppLocalTime:
+                      type: boolean
+      responses:
+        '200':
+          description: Query executed successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      additionalProperties: true
+                  fields:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        label:
+                          type: string
+                        type:
+                          type: string
+                  metadata:
+                    type: object
+                    required:
+                      - numFields
+                      - totalRecords
+                      - numRecords
+                    properties:
+                      numFields:
+                        type: integer
+                      totalRecords:
+                        type: integer
+                      numRecords:
+                        type: integer
+                      skip:
+                        type: integer
+                      top:
+                        type: integer

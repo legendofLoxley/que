@@ -1,0 +1,178 @@
+openapi: 3.1.0
+info:
+  title: Quickbase Apps API
+  version: 1.0.0
+  description: Core operations for managing Quickbase applications
+
+servers:
+  - url: https://api.quickbase.com/v1
+    description: Quickbase API server
+
+components:
+  schemas: {}
+  securitySchemes:
+    QuickbaseAuth:
+      type: apiKey
+      name: X-Api-Key
+      in: header
+      description: Your Quickbase user token (QB-USER-TOKEN format)
+
+security:
+  - QuickbaseAuth: []
+
+paths:
+  /apps:
+    post:
+      operationId: createApp
+      summary: Create a new application
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+              properties:
+                name:
+                  type: string
+                  description: Application name
+                description:
+                  type: string
+                  description: Application description
+                assignToken:
+                  type: boolean
+                  description: Assign user token to app
+                securityProperties:
+                  type: object
+                  properties:
+                    hideFromPublic:
+                      type: boolean
+                    allowExport:
+                      type: boolean
+      responses:
+        '200':
+          description: Application created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    description: The unique identifier for the created application
+
+  /apps/{appId}:
+    get:
+      operationId: getApp
+      summary: Get application details
+      parameters:
+        - name: appId
+          in: path
+          required: true
+          schema:
+            type: string
+            description: The unique identifier of the application
+      responses:
+        '200':
+          description: Application details retrieved
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  name:
+                    type: string
+                  description:
+                    type: string
+
+    post:
+      operationId: updateApp
+      summary: Update application properties
+      parameters:
+        - name: appId
+          in: path
+          required: true
+          schema:
+            type: string
+            description: The unique identifier of the application
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: New application name
+                description:
+                  type: string
+                  description: New application description
+      responses:
+        '200':
+          description: Application updated successfully
+
+    delete:
+      operationId: deleteApp
+      summary: Delete an application
+      parameters:
+        - name: appId
+          in: path
+          required: true
+          schema:
+            type: string
+            description: The unique identifier of the application
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+              properties:
+                name:
+                  type: string
+                  description: Application name for confirmation
+      responses:
+        '200':
+          description: Application deleted successfully
+
+  /apps/{appId}/copy:
+    post:
+      operationId: copyApp
+      summary: Copy an application
+      parameters:
+        - name: appId
+          in: path
+          required: true
+          schema:
+            type: string
+            description: The unique identifier of the application to copy
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+              properties:
+                name:
+                  type: string
+                  description: New application name
+                properties:
+                  type: object
+                  properties:
+                    keepData:
+                      type: boolean
+                      description: Whether to copy the app's data along with the schema
+                    assignUserToken:
+                      type: boolean
+                      description: Whether to assign the user token to the new app
+      responses:
+        '200':
+          description: Application copied successfully
