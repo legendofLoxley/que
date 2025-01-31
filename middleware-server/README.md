@@ -88,6 +88,73 @@ npm run dev
 npm start
 ```
 
+4. Start the server and tunnel with PM2:
+```bash
+# Install dependencies if not already done
+npm install
+
+# Start both middleware server and tunnel with PM2
+npm run pm2:start
+```
+
+This will:
+- Start the middleware server with auto-reload
+- Start a persistent tunnel with consistent URL (qb-middleware.loca.lt)
+- Auto-restart both processes if they crash
+- Provide process monitoring and log management
+
+Useful PM2 commands:
+```bash
+# View real-time logs
+npm run pm2:logs
+
+# Restart all processes
+npm run pm2:restart
+
+# Stop all processes
+npm run pm2:stop
+```
+
+5. Configure GPT Authentication:
+- In GPT editor UI, select "Authentication"
+- Choose "API Key" authentication
+- Configure to send x-api-key header matching your .env API_KEY
+
+Note: The tunnel now uses a consistent subdomain (qb-middleware.loca.lt), so you won't need to update your GPT's server URL after restarts.
+
+## Tunnel Management
+
+The middleware now uses multiple tunnels to support different GPT actions:
+
+- qb-apps.loca.lt - For Apps API endpoints
+- qb-records.loca.lt - For Records API endpoints
+- qb-tables.loca.lt - For Tables API endpoints
+- qb-files.loca.lt - For Files API endpoints
+- qb-users.loca.lt - For Users API endpoints
+
+Each tunnel includes reliability features:
+- Consistent subdomains for each endpoint group
+- Automatic retry logic with exponential backoff
+- Keep-alive settings to maintain connection
+- Error handling and reconnection
+- PM2 process management for auto-restart
+
+If you need to run the tunnels separately:
+```bash
+# Run tunnels directly
+npm run tunnel
+
+# Or use PM2 to manage the tunnels
+pm2 start ecosystem.config.cjs --only tunnels
+```
+
+Note: When configuring GPT actions, use the appropriate tunnel URL for each endpoint group:
+- Use https://qb-apps.loca.lt for Apps API actions
+- Use https://qb-records.loca.lt for Records API actions
+- Use https://qb-tables.loca.lt for Tables API actions
+- Use https://qb-files.loca.lt for Files API actions
+- Use https://qb-users.loca.lt for Users API actions
+
 ## API Endpoints
 
 ### Apps

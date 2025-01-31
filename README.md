@@ -21,15 +21,55 @@ This project integrates Quickbase's API with GPT actions through a middleware ap
 ### 1. GPT Actions Layer
 - OpenAPI specifications for GPT actions
 - Handles user interactions
-- Makes requests to middleware server
-- Uses API key authentication
+- Makes requests to middleware server through localtunnel
+- Uses API key authentication configured in GPT editor UI
 
 ### 2. Middleware Server
 - Routes requests to Quickbase API
 - Handles authentication headers
 - Provides unified endpoint structure
 - Manages request/response formatting
+- Exposed to internet via localtunnel for GPT access
 - See [middleware-server/README.md](middleware-server/README.md) for details
+
+### Development Access
+The middleware server uses multiple localtunnel instances with PM2 process management for reliable GPT access:
+1. Start everything with PM2:
+```bash
+cd middleware-server
+npm run pm2:start
+```
+
+This starts the middleware server and multiple persistent tunnels with:
+- Dedicated URLs for each endpoint group:
+  * https://qb-apps.loca.lt - For Apps API
+  * https://qb-records.loca.lt - For Records API
+  * https://qb-tables.loca.lt - For Tables API
+  * https://qb-files.loca.lt - For Files API
+  * https://qb-users.loca.lt - For Users API
+- Auto-restart on crashes
+- Process monitoring
+- Automatic reconnection
+- Keep-alive settings
+
+2. Configure GPT:
+   - Use the appropriate tunnel URL for each endpoint group in OpenAPI specs
+   - Set up API key authentication in GPT editor UI
+   - Configure x-api-key header to match middleware's API_KEY
+
+Note: The tunnel now uses a consistent subdomain, so you won't need to update your GPT configuration after restarts.
+
+Useful commands:
+```bash
+# View logs
+npm run pm2:logs
+
+# Restart processes
+npm run pm2:restart
+
+# Stop everything
+npm run pm2:stop
+```
 
 ### 3. Quickbase API
 - Final destination for requests

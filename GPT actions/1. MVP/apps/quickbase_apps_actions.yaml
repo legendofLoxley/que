@@ -5,17 +5,17 @@ info:
   description: Core operations for managing Quickbase applications
 
 servers:
-  - url: https://api.quickbase.com/v1
-    description: Quickbase API server
+  - url: https://dull-snakes-tan.loca.lt
+    description: Quickbase Middleware Server (Tunneled)
 
 components:
   schemas: {}
   securitySchemes:
     QuickbaseAuth:
       type: apiKey
-      name: X-Api-Key
+      name: x-api-key
       in: header
-      description: Your Quickbase user token (QB-USER-TOKEN format)
+      description: API key for middleware authentication (must match API_KEY in middleware .env)
 
 security:
   - QuickbaseAuth: []
@@ -72,7 +72,9 @@ paths:
           required: true
           schema:
             type: string
-            description: The unique identifier of the application
+            description: The unique identifier of the application (cannot be empty)
+            minLength: 1
+            pattern: "^[a-zA-Z0-9]+$"
       responses:
         '200':
           description: Application details retrieved

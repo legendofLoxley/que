@@ -5,7 +5,12 @@
   "type": "module",
   "scripts": {
     "start": "node src/index.js",
-    "dev": "node --watch src/index.js"
+    "dev": "node --watch src/index.js",
+    "pm2:start": "pm2 start ecosystem.config.cjs",
+    "pm2:stop": "pm2 stop all",
+    "pm2:restart": "pm2 restart all",
+    "pm2:logs": "pm2 logs",
+    "tunnel": "node tunnel.js"
   },
   "keywords": [],
   "author": "",
@@ -17,5 +22,9 @@
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "winston": "^3.17.0"
+  },
+  "devDependencies": {
+    "localtunnel": "^2.0.2",
+    "pm2": "^5.4.3"
   }
 }
