@@ -1,0 +1,422 @@
+openapi: 3.1.0
+info:
+  title: Quickbase Tables API
+  version: 1.0.0
+  description: Operations for managing Quickbase tables and their relationships
+
+servers:
+  - url: https://qb-tables.loca.lt
+    description: Quickbase Tables Middleware Server (Tunneled)
+
+components:
+  schemas:
+    TableProperties:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name for the table
+        description:
+          type: string
+          description: The description for the table
+        singleRecordName:
+          type: string
+          description: The singular noun for records in the table
+        pluralRecordName:
+          type: string
+          description: The plural noun for records in the table
+      required:
+        - name
+
+    RelationshipSummaryField:
+      type: object
+      required:
+        - accumulationType
+      properties:
+        summaryFid:
+          type: number
+          description: The field id to summarize
+        label:
+          type: string
+          description: The label for the summary field
+        accumulationType:
+          type: string
+          description: The accumulation type for the summary field
+          enum:
+            - AVG
+            - SUM
+            - MAX
+            - MIN
+            - STD-DEV
+            - COUNT
+            - COMBINED-TEXT
+            - COMBINED-USER
+            - DISTINCT-COUNT
+        where:
+          type: string
+          description: The filter using Quickbase query language
+
+  securitySchemes:
+    QuickbaseAuth:
+      type: apiKey
+      name: x-api-key
+      in: header
+      description: API key for middleware authentication (must match API_KEY in middleware .env)
+
+security:
+  - QuickbaseAuth: []
+
+paths:
+  /tables:
+    get:
+      operationId: listTables
+      summary: Get a list of all tables in an application
+      parameters:
+        - name: appId
+          in: query
+          required: true
+          schema:
+            type: string
+          description: The unique identifier of the application
+      responses:
+        '200':
+          description: List of tables retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                    id:
+                      type: string
+                    description:
+                      type: string
+                    created:
+                      type: string
+                      format: date-time
+                    updated:
+                      type: string
+                      format: date-time
+                    singleRecordName:
+                      type: string
+                    pluralRecordName:
+                      type: string
+
+    post:
+      operationId: createTable
+      summary: Create a new table in an application
+      parameters:
+        - name: appId
+          in: query
+          required: true
+          schema:
+            type: string
+          description: The unique identifier of the application
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TableProperties'
+      responses:
+        '200':
+          description: Table created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    description: The unique identifier of the created table
+                  name:
+                    type: string
+                  description:
+                    type: string
+
+  /tables/{tableId}:
+    get:
+      operationId: getTable
+      summary: Get details of a specific table
+      parameters:
+        - name: appId
+          in: query
+          required: true
+          schema:
+            type: string
+          description: The unique identifier of the application
+        - name: tableId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The unique identifier of the table
+      responses:
+        '200':
+          description: Table details retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  name:
+                    type: string
+                  description:
+                    type: string
+                  created:
+                    type: string
+                    format: date-time
+                  updated:
+                    type: string
+                    format: date-time
+                  singleRecordName:
+                    type: string
+                  pluralRecordName:
+                    type: string
+
+    post:
+      operationId: updateTable
+      summary: Update properties of a specific table
+      parameters:
+        - name: appId
+          in: query
+          required: true
+          schema:
+            type: string
+          description: The unique identifier of the application
+        - name: tableId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The unique identifier of the table
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TableProperties'
+      responses:
+        '200':
+          description: Table updated successfully
+
+    delete:
+      operationId: deleteTable
+      summary: Delete a specific table
+      parameters:
+        - name: appId
+          in: query
+          required: true
+          schema:
+            type: string
+          description: The unique identifier of the application
+        - name: tableId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The unique identifier of the table
+      responses:
+        '200':
+          description: Table deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  deletedTableId:
+                    type: string
+                    description: The ID of the deleted table
+
+  /tables/{tableId}/relationships:
+    get:
+      operationId: getRelationships
+      summary: Get all relationships for a table
+      parameters:
+        - name: tableId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The unique identifier of the child table
+        - name: skip
+          in: query
+          required: false
+          schema:
+            type: integer
+          description: The number of relationships to skip
+      responses:
+        '200':
+          description: Relationships retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - relationships
+                properties:
+                  relationships:
+                    type: array
+                    items:
+                      type: object
+                      required:
+                        - id
+                        - parentTableId
+                        - childTableId
+                        - isCrossApp
+                      properties:
+                        id:
+                          type: integer
+                        parentTableId:
+                          type: string
+                        childTableId:
+                          type: string
+                        isCrossApp:
+                          type: boolean
+                        foreignKeyField:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                            label:
+                              type: string
+                            type:
+                              type: string
+                  metadata:
+                    type: object
+                    properties:
+                      skip:
+                        type: integer
+                      totalRelationships:
+                        type: integer
+                      numRelationships:
+                        type: integer
+
+  /tables/{tableId}/relationship:
+    post:
+      operationId: createRelationship
+      summary: Create a new relationship
+      parameters:
+        - name: tableId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The unique identifier of the child table
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - parentTableId
+              properties:
+                parentTableId:
+                  type: string
+                  description: The parent table id for the relationship
+                foreignKeyField:
+                  type: object
+                  properties:
+                    label:
+                      type: string
+                      description: The label for the foreign key field
+                lookupFieldIds:
+                  type: array
+                  items:
+                    type: integer
+                  description: Array of field ids in parent table to become lookup fields
+                summaryFields:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/RelationshipSummaryField'
+      responses:
+        '200':
+          description: Relationship created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - id
+                  - parentTableId
+                  - childTableId
+                properties:
+                  id:
+                    type: integer
+                  parentTableId:
+                    type: string
+                  childTableId:
+                    type: string
+
+  /tables/{tableId}/relationship/{relationshipId}:
+    post:
+      operationId: updateRelationship
+      summary: Update an existing relationship
+      parameters:
+        - name: tableId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The unique identifier of the child table
+        - name: relationshipId
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: The relationship id (foreign key field id)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                lookupFieldIds:
+                  type: array
+                  items:
+                    type: integer
+                  description: Array of field ids to become lookup fields
+                summaryFields:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/RelationshipSummaryField'
+      responses:
+        '200':
+          description: Relationship updated successfully
+
+    delete:
+      operationId: deleteRelationship
+      summary: Delete a relationship
+      parameters:
+        - name: tableId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The unique identifier of the child table
+        - name: relationshipId
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: The relationship id (foreign key field id)
+      responses:
+        '200':
+          description: Relationship deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - relationshipId
+                properties:
+                  relationshipId:
+                    type: integer
+                    description: The ID of the deleted relationship
