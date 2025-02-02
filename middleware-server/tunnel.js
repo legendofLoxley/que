@@ -6,7 +6,8 @@ const TUNNELS = [
   { name: 'records', subdomain: 'qb-records' },
   { name: 'tables', subdomain: 'qb-tables' },
   { name: 'files', subdomain: 'qb-files' },
-  { name: 'users', subdomain: 'qb-users' }
+  { name: 'users', subdomain: 'qb-users' },
+  { name: 'fields', subdomain: 'qb-fields' }
 ];
 
 const MAX_RETRIES = 5;

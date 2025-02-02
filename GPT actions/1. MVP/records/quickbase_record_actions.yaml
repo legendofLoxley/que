@@ -5,8 +5,8 @@ info:
   description: Core operations for managing Quickbase records
 
 servers:
-  - url: https://api.quickbase.com/v1
-    description: Quickbase API server
+  - url: https://qb-records.loca.lt
+    description: Quickbase Records Middleware Server (Tunneled)
 
 components:
   schemas: {}

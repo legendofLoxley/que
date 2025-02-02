@@ -33,6 +33,7 @@ This middleware server acts as a proxy between GPT actions and the Quickbase API
   - Tables API with relationships
   - Files API with binary support
   - Users API with access management
+  - Fields API with usage statistics
 - Authentication system:
   - Middleware API key validation
   - Quickbase header management
@@ -131,6 +132,7 @@ The middleware now uses multiple tunnels to support different GPT actions:
 - qb-tables.loca.lt - For Tables API endpoints
 - qb-files.loca.lt - For Files API endpoints
 - qb-users.loca.lt - For Users API endpoints
+- qb-fields.loca.lt - For Fields API endpoints
 
 Each tunnel includes reliability features:
 - Consistent subdomains for each endpoint group
@@ -154,6 +156,7 @@ Note: When configuring GPT actions, use the appropriate tunnel URL for each endp
 - Use https://qb-tables.loca.lt for Tables API actions
 - Use https://qb-files.loca.lt for Files API actions
 - Use https://qb-users.loca.lt for Users API actions
+- Use https://qb-fields.loca.lt for Fields API actions
 
 ## API Endpoints
 
@@ -193,6 +196,15 @@ Note: When configuring GPT actions, use the appropriate tunnel URL for each endp
 - PUT /users/deny - Deny users access
 - PUT /users/deny/:shouldDeleteFromGroups - Deny and remove users from groups
 - PUT /users/undeny - Undeny users
+
+### Fields
+- GET /fields - List fields in a table
+- POST /fields - Create a new field
+- DELETE /fields - Delete multiple fields
+- GET /fields/:fieldId - Get field details
+- POST /fields/:fieldId - Update field properties
+- GET /fields/usage - Get usage statistics for all fields
+- GET /fields/usage/:fieldId - Get usage statistics for a specific field
 
 ## Authentication
 

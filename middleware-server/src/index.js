@@ -47,8 +47,11 @@ app.put('/users/undeny', handleQuickbaseRequest('PUT', '/v1/users/undeny'));
 // Fields endpoints
 app.get('/fields', handleQuickbaseRequest('GET', '/v1/fields'));
 app.post('/fields', handleQuickbaseRequest('POST', '/v1/fields'));
+app.delete('/fields', handleQuickbaseRequest('DELETE', '/v1/fields'));
 app.get('/fields/:fieldId', handleQuickbaseRequest('GET', '/v1/fields/:fieldId'));
 app.post('/fields/:fieldId', handleQuickbaseRequest('POST', '/v1/fields/:fieldId'));
+app.get('/fields/usage', handleQuickbaseRequest('GET', '/v1/fields/usage'));
+app.get('/fields/usage/:fieldId', handleQuickbaseRequest('GET', '/v1/fields/usage/:fieldId'));
 
 // Records endpoints
 app.post('/records/query', handleQuickbaseRequest('POST', '/v1/records/query/'));

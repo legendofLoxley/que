@@ -5,7 +5,7 @@ info:
   description: Core operations for managing Quickbase applications
 
 servers:
-  - url: https://dull-snakes-tan.loca.lt
+  - url: https://qb-apps.loca.lt
     description: Quickbase Middleware Server (Tunneled)
 
 components:
