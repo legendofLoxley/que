@@ -1,3 +1,28 @@
+# Dependencies
 node_modules/
+package-lock.json
+
+# Environment
 .env
+.env.*
+
+# Logs
 *.log
+logs/
+npm-debug.log*
+
+# PM2
+.pm2/
+ecosystem.config.js.bak
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Build
+dist/
+build/

@@ -3,7 +3,7 @@ import { config } from '../config.js';
 import { performanceLogger } from './logger.js';
 
 const quickbaseClient = axios.create({
-  baseURL: 'https://api.quickbase.com',
+  baseURL: 'https://api.quickbase.com/v1',
   headers: {
     'QB-Realm-Hostname': config.quickbase.realmHostname,
     'Authorization': `QB-USER-TOKEN ${config.quickbase.userToken}`,
